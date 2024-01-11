@@ -1,0 +1,580 @@
+
+
+
+  DRELP  run on  10/01/2024
+Start time:  16:37     GMT+0800
+ Initial phase   0.00000000    
+
+Laser-plasma parameters
+=======================
+
+Pulse length (fs)           50.00 =       232.56 w0**-1
+Spot size (mu)              24.75
+Intensity  (Wcm-2)      4.660E+16
+Irradiance (Wcm-2mu2)   7.644E+15
+Background density:      1.37E+17
+Critical density n_c:    6.10E+21
+Plasma length (mu):      1500.00
+Leading edge (mu):        550.00
+Target gas:                   He
+Laser power (TW)           0.8932
+Pcrit (TW)                 434.67
+P/Pc:                      0.0021
+n_e/n_c:                 4.03E-05
+Cavitation Dn_e/n_e:     4.67E-04
+
+Focussing:
+==========
+
+Rayleigh length (mu):     9503.312
+f-number                  -750.000
+Focal length: (mu)       -7500.000
+Lens width:   (mu)          10.000
+Initial spot (mu):           31.53
+Initial Intensity:       2.87E+16
+
+
+Power contours at:
+          0.500
+          0.640
+          0.700
+          0.860
+
+Mesh for (r,z) plots:
+   303   699
+  Plot region (mu):     100.0000 x    2500.0000
+
+Other parameters (code units):
+
+     nt   10000
+     nr     700
+     nz     400
+     dt        3.879
+   dtem        4.912
+   izsu      33
+ icycem       1
+     rl     3102.81
+     zl     1551.40
+     dr        4.4326
+     dz        3.8785
+ Zrmass        0.0003
+   wp0         0.006
+  a0(f)        0.074
+ Io(18)        0.047
+   tau       139.53
+   t0        775.72
+  sigma      383.97
+ sigma0      383.97
+  f #       -750.0
+  Rfoc   -116355.2
+   D         155.1
+   Zray   147434.6
+ min dr        4.43
+ max dt        4.91
+  melec       1
+  igrid       1
+  wa0          8.96
+  Ea0          0.06
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+pulse00.snap   400   698
+rhoi00.snap    400   349
+ plasma front edge (mu)   549.999817      end    2049.99976    
+pulse01.snap   400   698
+rhoi01.snap    400   349
+pulse02.snap   400   698
+rhoi02.snap    400   349
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+pulse03.snap   400   698
+rhoi03.snap    400   349
+ plasma front edge (mu)   449.999359      end    1949.98950    
+pulse04.snap   400   698
+rhoi04.snap    400   349
+pulse05.snap   400   698
+rhoi05.snap    400   349
+emar2.xy    
+emaz2.xy    
+emph2.xy    
+rher2.xy    
+natz2.xy    
+rhez2.xy    
+ni1z2.xy    
+ni2z2.xy    
+ni0z2.xy    
+pulse06.snap   400   698
+rhoi06.snap    400   349
+ plasma front edge (mu)   350.001617      end    1849.97913    
+pulse07.snap   400   698
+rhoi07.snap    400   349
+emar3.xy    
+emaz3.xy    
+emph3.xy    
+rher3.xy    
+natz3.xy    
+rhez3.xy    
+ni1z3.xy    
+ni2z3.xy    
+ni0z3.xy    
+pulse08.snap   400   698
+rhoi08.snap    400   349
+pulse09.snap   400   698
+rhoi09.snap    400   349
+ plasma front edge (mu)   250.003906      end    1749.96887    
+pulse10.snap   400   698
+rhoi10.snap    400   349
+emar4.xy    
+emaz4.xy    
+emph4.xy    
+rher4.xy    
+natz4.xy    
+rhez4.xy    
+ni1z4.xy    
+ni2z4.xy    
+ni0z4.xy    
+pulse11.snap   400   698
+rhoi11.snap    400   349
+pulse12.snap   400   698
+rhoi12.snap    400   349
+emar5.xy    
+emaz5.xy    
+emph5.xy    
+rher5.xy    
+natz5.xy    
+rhez5.xy    
+ni1z5.xy    
+ni2z5.xy    
+ni0z5.xy    
+ plasma front edge (mu)   150.006180      end    1649.95850    
+pulse13.snap   400   698
+rhoi13.snap    400   349
+pulse14.snap   400   698
+rhoi14.snap    400   349
+pulse15.snap   400   698
+rhoi15.snap    400   349
+emar6.xy    
+emaz6.xy    
+emph6.xy    
+rher6.xy    
+natz6.xy    
+rhez6.xy    
+ni1z6.xy    
+ni2z6.xy    
+ni0z6.xy    
+pulse16.snap   400   698
+rhoi16.snap    400   349
+ plasma front edge (mu)   50.0061226      end    1549.94824    
+pulse17.snap   400   698
+rhoi17.snap    400   349
+emar7.xy    
+emaz7.xy    
+emph7.xy    
+rher7.xy    
+natz7.xy    
+rhez7.xy    
+ni1z7.xy    
+ni2z7.xy    
+ni0z7.xy    
+pulse18.snap   400   698
+rhoi18.snap    400   349
+pulse19.snap   400   698
+rhoi19.snap    400   349
+ plasma front edge (mu)  -49.9936829      end    1449.93787    
+pulse20.snap   400   698
+rhoi20.snap    400   349
+emar8.xy    
+emaz8.xy    
+emph8.xy    
+rher8.xy    
+natz8.xy    
+rhez8.xy    
+ni1z8.xy    
+ni2z8.xy    
+ni0z8.xy    
+pulse21.snap   400   698
+rhoi21.snap    400   349
+pulse22.snap   400   698
+rhoi22.snap    400   349
+ plasma front edge (mu)  -149.993729      end    1349.92761    
+pulse23.snap   400   698
+rhoi23.snap    400   349
+emar9.xy    
+emaz9.xy    
+emph9.xy    
+rher9.xy    
+natz9.xy    
+rhez9.xy    
+ni1z9.xy    
+ni2z9.xy    
+ni0z9.xy    
+pulse24.snap   400   698
+rhoi24.snap    400   349
+pulse25.snap   400   698
+rhoi25.snap    400   349
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+ plasma front edge (mu)  -249.991455      end    1249.91724    
+pulse26.snap   400   698
+rhoi26.snap    400   349
+pulse27.snap   400   698
+rhoi27.snap    400   349
+pulse28.snap   400   698
+rhoi28.snap    400   349
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+ plasma front edge (mu)  -349.989197      end    1149.90698    
+pulse29.snap   400   698
+rhoi29.snap    400   349
+pulse30.snap   400   698
+rhoi30.snap    400   349
+emar2.xy    
+emaz2.xy    
+emph2.xy    
+rher2.xy    
+natz2.xy    
+rhez2.xy    
+ni1z2.xy    
+ni2z2.xy    
+ni0z2.xy    
+pulse31.snap   400   698
+rhoi31.snap    400   349
+pulse32.snap   400   698
+rhoi32.snap    400   349
+ plasma front edge (mu)  -449.986908      end    1049.89661    
+pulse33.snap   400   698
+rhoi33.snap    400   349
+emar3.xy    
+emaz3.xy    
+emph3.xy    
+rher3.xy    
+natz3.xy    
+rhez3.xy    
+ni1z3.xy    
+ni2z3.xy    
+ni0z3.xy    
+pulse34.snap   400   698
+rhoi34.snap    400   349
+pulse35.snap   400   698
+rhoi35.snap    400   349
+ plasma front edge (mu)  -549.987427      end    949.886353    
+emar4.xy    
+emaz4.xy    
+emph4.xy    
+rher4.xy    
+natz4.xy    
+rhez4.xy    
+ni1z4.xy    
+ni2z4.xy    
+ni0z4.xy    
+pulse36.snap   400   698
+rhoi36.snap    400   349
+pulse37.snap   400   698
+rhoi37.snap    400   349
+pulse38.snap   400   698
+rhoi38.snap    400   349
+emar5.xy    
+emaz5.xy    
+emph5.xy    
+rher5.xy    
+natz5.xy    
+rhez5.xy    
+ni1z5.xy    
+ni2z5.xy    
+ni0z5.xy    
+ plasma front edge (mu)  -649.997742      end    849.876038    
+pulse39.snap   400   698
+rhoi39.snap    400   349
+pulse40.snap   400   698
+rhoi40.snap    400   349
+emar6.xy    
+emaz6.xy    
+emph6.xy    
+rher6.xy    
+natz6.xy    
+rhez6.xy    
+ni1z6.xy    
+ni2z6.xy    
+ni0z6.xy    
+pulse41.snap   400   698
+rhoi41.snap    400   349
+ plasma front edge (mu)  -750.008057      end    749.865723    
+pulse42.snap   400   698
+rhoi42.snap    400   349
+pulse43.snap   400   698
+rhoi43.snap    400   349
+emar7.xy    
+emaz7.xy    
+emph7.xy    
+rher7.xy    
+natz7.xy    
+rhez7.xy    
+ni1z7.xy    
+ni2z7.xy    
+ni0z7.xy    
+pulse44.snap   400   698
+rhoi44.snap    400   349
+ plasma front edge (mu)  -850.018372      end    649.855408    
+pulse45.snap   400   698
+rhoi45.snap    400   349
+pulse46.snap   400   698
+rhoi46.snap    400   349
+emar8.xy    
+emaz8.xy    
+emph8.xy    
+rher8.xy    
+natz8.xy    
+rhez8.xy    
+ni1z8.xy    
+ni2z8.xy    
+ni0z8.xy    
+pulse47.snap   400   698
+rhoi47.snap    400   349
+pulse48.snap   400   698
+rhoi48.snap    400   349
+ plasma front edge (mu)  -950.028625      end    549.845093    
+emar9.xy    
+emaz9.xy    
+emph9.xy    
+rher9.xy    
+natz9.xy    
+rhez9.xy    
+ni1z9.xy    
+ni2z9.xy    
+ni0z9.xy    
+pulse49.snap   400   698
+rhoi49.snap    400   349
+pulse50.snap   400   698
+rhoi50.snap    400   349
+pulse51.snap   400   698
+rhoi51.snap    400   349
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+ plasma front edge (mu)  -1050.03894      end    449.844635    
+pulse52.snap   400   698
+rhoi52.snap    400   349
+pulse53.snap   400   698
+rhoi53.snap    400   349
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+pulse54.snap   400   698
+rhoi54.snap    400   349
+ plasma front edge (mu)  -1150.04919      end    349.846893    
+pulse55.snap   400   698
+rhoi55.snap    400   349
+pulse56.snap   400   698
+rhoi56.snap    400   349
+emar2.xy    
+emaz2.xy    
+emph2.xy    
+rher2.xy    
+natz2.xy    
+rhez2.xy    
+ni1z2.xy    
+ni2z2.xy    
+ni0z2.xy    
+pulse57.snap   400   698
+rhoi57.snap    400   349
+ plasma front edge (mu)  -1250.05957      end    249.849182    
+pulse58.snap   400   698
+rhoi58.snap    400   349
+emar3.xy    
+emaz3.xy    
+emph3.xy    
+rher3.xy    
+natz3.xy    
+rhez3.xy    
+ni1z3.xy    
+ni2z3.xy    
+ni0z3.xy    
+pulse59.snap   400   698
+rhoi59.snap    400   349
+pulse60.snap   400   698
+rhoi60.snap    400   349
+ plasma front edge (mu)  -1350.06982      end    149.851456    
+pulse61.snap   400   698
+rhoi61.snap    400   349
+emar4.xy    
+emaz4.xy    
+emph4.xy    
+rher4.xy    
+natz4.xy    
+rhez4.xy    
+ni1z4.xy    
+ni2z4.xy    
+ni0z4.xy    
+pulse62.snap   400   698
+rhoi62.snap    400   349
+pulse63.snap   400   698
+rhoi63.snap    400   349
+emar5.xy    
+emaz5.xy    
+emph5.xy    
+rher5.xy    
+natz5.xy    
+rhez5.xy    
+ni1z5.xy    
+ni2z5.xy    
+ni0z5.xy    
+pulse64.snap   400   698
+rhoi64.snap    400   349
+ plasma front edge (mu)  -1450.08020      end    49.8514023    
+pulse65.snap   400   698
+rhoi65.snap    400   349
+pulse66.snap   400   698
+rhoi66.snap    400   349
+emar6.xy    
+emaz6.xy    
+emph6.xy    
+rher6.xy    
+natz6.xy    
+rhez6.xy    
+ni1z6.xy    
+ni2z6.xy    
+ni0z6.xy    
+pulse67.snap   400   698
+rhoi67.snap    400   349
+ plasma front edge (mu)  -1550.09045      end   -50.1484032    
+pulse68.snap   400   698
+rhoi68.snap    400   349
+pulse69.snap   400   698
+rhoi69.snap    400   349
+emar7.xy    
+emaz7.xy    
+emph7.xy    
+rher7.xy    
+natz7.xy    
+rhez7.xy    
+ni1z7.xy    
+ni2z7.xy    
+ni0z7.xy    
+pulse70.snap   400   698
+rhoi70.snap    400   349
+ plasma front edge (mu)  -1650.10083      end   -150.148453    
+pulse71.snap   400   698
+rhoi71.snap    400   349
+emar8.xy    
+emaz8.xy    
+emph8.xy    
+rher8.xy    
+natz8.xy    
+rhez8.xy    
+ni1z8.xy    
+ni2z8.xy    
+ni0z8.xy    
+pulse72.snap   400   698
+rhoi72.snap    400   349
+pulse73.snap   400   698
+rhoi73.snap    400   349
+ plasma front edge (mu)  -1750.11108      end   -250.146179    
+pulse74.snap   400   698
+rhoi74.snap    400   349
+emar9.xy    
+emaz9.xy    
+emph9.xy    
+rher9.xy    
+natz9.xy    
+rhez9.xy    
+ni1z9.xy    
+ni2z9.xy    
+ni0z9.xy    
+pulse75.snap   400   698
+rhoi75.snap    400   349
+pulse76.snap   400   698
+rhoi76.snap    400   349
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+ plasma front edge (mu)  -1850.12134      end   -350.143921    
+pulse77.snap   400   698
+rhoi77.snap    400   349
+pulse78.snap   400   698
+rhoi78.snap    400   349
+pulse79.snap   400   698
+rhoi79.snap    400   349
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+pulse80.snap   400   698
+rhoi80.snap    400   349
+ plasma front edge (mu)  -1950.13171      end   -450.141632    
+
+
+Loop timing (in seconds):
+------------------------
+ total      1220.43
+     em      902.61
+ plasma       17.11
+ ioniz       198.23
+   diag       85.24
+ loop          0.122
+
+
+emac0.xy    
+rmsb0.xy    
+rpo20.xy    
+hami0.xy    
+i0r00.xy    
+a2r00.xy    
+aphi0.xy    
+rer00.xy    
+nar00.xy    
+n0r00.xy    
+n1r00.xy    
+n2r00.xy    
+a2ne0.xy    
+rhet0.xy    
+Finished run at time:  16:58

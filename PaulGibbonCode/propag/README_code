@@ -1,0 +1,199 @@
+==================================================================
+		DRELP	Version 2.1
+==================================================================
+
+		Main routines
+		=============
+
+	drelp.f		Control program
+	stamp.f		Date & time stamp
+	init.f		Initialise defaults
+	setup.f		Renormalise inputs and set up run config
+	arinit.f	Zero/initialise arrays
+	grid.f		Grid initialise
+	pulinit.f	Initialise pulse
+	outini.f	Dump input parameters to stdout
+	absorb.f	Absorber for EM wave at r-boundary
+
+	emprop.f	Laser propagation with NLSE solver
+	launch.f	Laser propag. with fixed pulse shape
+	ionize.f	Ion density - field ionisation or predefined profile
+	density.f	Electron density - ponderomotive force
+	rezone.f	Rezone grid: plasma densities moved c*dt back thru grid
+
+	diagnostics.f	Dump graphic O/P
+	grafout.f	Line snapshots
+	gmovie.f	2D snapshots
+	grzsurf.f	rz history at centre of pulse
+	flhist.f	store histories
+	emhist.f
+	ghist.f		History plots
+	powcon.f	Output included power contours
+
+====================================================================
+
+
+
+
+		Input parameters
+		================
+
+Laser
+-----
+  tau       laser pulse length (FWHM in fs)
+  t0	    offset for pulse centre on grid (mu)
+  trun	    total run time (fs)
+  xlam      laser wavelength (microns)
+  sigma     focal spot size (1/e waist, microns)
+  ptw       laser power (in TW)                 |
+  xi0       focussed laser intensity (Wcm**-2)  | specify just one of these
+  a0        laser quiver amplitude (vosc/c)     |
+
+  ilas	    1  .....   a(x,t) = a0 exp(-x**2/sigma**2) sech( 2(t-tdel)/tp )
+            2  .....   a(x,t) = gaussian*sqrt(t/tp), t<tp; const t>=tp
+            3  .....   a(x,t) = gaussian*gaussian
+            4  .....   NLSE propag with initial gaussian a0exp(-x**2/2/sig**2)
+                            - sigma 1/e intensity
+
+  fno       f-number of focussing lens
+  Dlens     lens diameter (mu)
+
+
+
+Plasma
+------
+  den0       gas or electron density (cm**-3)
+  rl	     grid width (mu)
+  zl	     grid length (mu) 
+  zplas	     total plasma length (mu)
+  zbord	     plasma ramp length for tanh profile (mu) 
+  zfoff	     offset
+  gas	     type of target, currently 'H' or 'He'
+
+
+Numerics/Control
+----------------
+  nr	     # grid points in r
+  nz	     # grid points in z
+  igrid	     # grid type 1=uniform, 2=non-linear, equal action
+  dt	     timestep
+  icycem     # subcycles for ionisation
+
+  inorm     1 = time in w0**-1
+            2 = time, zl, tau, t0, dt in fs; trun, sigma, rl,  in microns
+            3 = time in wp**-1
+   
+  melec     0 = uniform, static (ponderomotive force off)
+            1 = adiabatic (pond. force on)
+          
+   mrel     1 = rel. self-foc on (0=off)
+
+   mfoc     0 = pulse with flat phase fronts
+            1 = pulse with curved phase fronts (lens)
+
+  mplas     0 = infinite  zedge <0, zend > zl
+            1 = semi-infinite: zedge=zl, zend(0) = zplas+zl
+            2 = finite, length zplas, focus at centre
+            3 = finite, length zplas, focus at leading edge - zfoff
+
+ mioniz     0 = sharp-edged pre-plasma
+            1 = include ionization
+            2 = preplasma with tanh borders
+
+  inorm     1 = time in w0**-1, r,z in c/w0
+            2 = time, zl, tau, t0, dt in fs; trun, sigma, rl,  in microns
+            3 = time in wp**-1
+
+
+Output parameters/switches
+--------------------------
+
+   rplmax	max. radius for 2D plots
+   igr		frequency for 1D plots    (same units as trun)
+   iout		frequency for printed O/P 
+   ihist	frequency for storing time-histories 
+   imovie	frequency for 2D snapshots
+   izsurf	frequency for rz time-histories
+
+
+Power contours
+--------------
+     ncon  ...  # contours to plot in power.ps
+     pcon  ...  contour levels i/p as fraction of initial laser power
+    ipcon  ...  selected level to plot with other time-history plots
+
+
+===============================================================
+
+		Output files
+		============
+
+The .xy plots are simple 2-column line plots of the laser and plasma
+variables in r, z and t respectively. For spatial plots, 'N' stands
+for the snapshot number, determined by the switches igr or imovie above.
+They can all be viewed with gnuplot or xmgrace.  
+
+The .snap and .2d plots are surface plots of the form
+f(r,z).  These can also be viewed with gnuplot - sample options files
+*.gnu are provided as a guide.
+
+ 
+ Graph id          Name		Quantity
+     
+     
+     100	rhirN.xy	ni(r)	Ion density vs r
+     200	rherN.xy	ne(r)	Electron density vs r
+     500	emarN.xy	|a(r)|	Laser pulse amplitude vs r
+     600  			Er(r)	Electric field vs r
+
+     1000	rhazN.xy	na(z)   Neutral gas density vs z
+     1100	rhezN.xy	ne(z)   Electron density vs z
+     1150	rhizN.xy	ne(z)   Ion density vs z
+     1300	emazN.xy	|a(z)|  Laser pulse amplitude vs z
+     1350	emphN.xy	arg(a(z)) Laser pulse phase vs z
+     
+Histories
+---------
+     6000	rhet0.xy		Qtot	electron charge cons     
+     5000	emac0.xy		|a|^2   em wave action
+     5100       rmsb0.xy                1/e beam radius
+     5150       rpo20.xy         r(P0/2) 50% included power contour
+     5200       hami0.xy			Hamiltonian
+     5300	a2r00.xy         I/I0(r=0) on-axis intensity
+
+     5400	rer00.xy		ne(r=0) on-axis density
+     5500	a2ne0.xy		ne(0)*I(0)  Thomson scatter  
+     5600	aphi0.xy		arg(a(r=0)) on-axis phase 
+       10				xnu(r)	absorption zone
+
+2D snapshots (in window following laser pulse)
+------------
+
+	pulseNN.snap		|a(r,z)|  Laser amplitude
+	rhoeNN.snap		ne(r,z)   Electron density
+
+2D histories (r,z in lab frame)
+------------
+
+	i0.2d			a(r,z)   Amplitude slice at centre of pulse
+	rho.2d			ne(r,z)  Electron density  " "
+	thom.2d				 Thomson image from " "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

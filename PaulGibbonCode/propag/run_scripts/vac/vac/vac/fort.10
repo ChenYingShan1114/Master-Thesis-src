@@ -1,0 +1,127 @@
+
+Steady state Gaussian beam focussed in vacuum
+
+- f/10, spot size 10 microns
+
+
+ $idynf
+   trun = 4000.
+   nt = 0
+   rl = 150.
+   zl = 1.
+   zplas = 3000.
+   zbord = 200.
+   zfoff = 0.
+   nr = 400
+   nz = 1
+   igrid = 1
+   dt = 0.4
+   icycem = 1
+
+   ilas = 4
+   ptw = 6.05
+   tau=20000.
+   t0=1.
+   tprobe = 0.
+   sigma = 10.
+   fno = 10.
+   Dlens = 200.
+   fpol = 0.5
+   xlam = 0.8
+
+   Te = 0.05
+   den0 = 1.e10
+   zrmass = 5.4e-4
+   Zion=1.
+
+   rplmax = 50.
+   igr= 2000
+   iout =400
+   ihist =20
+   imovie =9000
+   izsurf = 100
+
+   inorm = 2
+   melec = 0
+   mrel = 0
+   mfoc = 1
+   mioniz = 0
+   mplas = 0
+
+   nitem = 3
+   mabs = 1
+   nabs = 15
+   ncon = 4
+   pcon(1) = 0.5,0.64,0.7,0.86
+   ipcon = 3
+   xnumin = 1.e-2
+   xnumax = 0.1
+   isurf = 1
+   ksurf = 1
+ $end   
+
+
+
+Glossary
+========
+
+  wp0       ratio wp/w0
+  tau       laser pulse length (in w0**-1)
+  xlam      laser wavelength (microns)
+ power      laser power in TW
+  xi0       focussed laser intensity (Wcm**-2)
+  a0        laser quiver amplitude (vosc/c)
+
+  inorm     1 = time in w0**-1
+            2 = time, zl, tau, t0, dt in fs; trun, sigma, rl,  in microns
+            3 = time in wp**-1
+   
+  melec     0 = uniform, static (no Fpond)
+            1 = adiabatic
+            2 = dynamic
+
+   mrel     1 = rel. self-foc on (0=off)
+
+   mfoc     0 = pulse with flat phase fronts
+            1 = pulse with curved phase fronts (lens)
+
+  mplas     0 = infinite  zedge <0, zend > zl
+            1 = semi-infinite: zedge<0, zend(0) = zplas
+            2 = finite, length zplas
+
+ mioniz     0 = sharp-edged pre-plasma
+            1 = include ionization
+            2 = preplasma with tanh borders
+
+  Pulse
+  -----
+    ilas:   1  .....   a(x,t) = a0 exp(-x**2/sigma**2) sech( 2(t-tdel)/tp )
+            2  .....   a(x,t) = gaussian*sqrt(t/tp), t<tp; const t>=tp
+            3  .....   a(x,t) = gaussian*gaussian
+            4  .....   NLSE propag with initial gaussian a0exp(-x**2/2/sig**2)
+                            - sigma 1/e intensity
+
+ Lens
+ ----
+     fno    f-number
+     Dlens  lens diameter as fraction of radial grid length
+
+
+  Absorber on RH boundary
+  -----------------------
+     nabs   # absorber points
+   xnumin   min value at r = R - nabs*dr
+   xnumax   max value at r = R
+
+
+  Grid
+  ----
+     igrid: 1 ...  uniform
+            2 ...  Gaussian (constant action weighting)
+
+  Power contours
+  --------------
+     ncon  ...  # contours to plot in power.ps
+     pcon  ...  contour levels i/p as fraction of initial laser power
+    ipcon  ...  selected level to plot with other time-history plots
+

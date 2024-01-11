@@ -1,0 +1,91 @@
+==============================================================
+
+README file for DRELP - Dynamic RElativistic Laser Propagation
+
+==============================================================
+
+
+DRELP is a 2D (r,z,t) wave propagation model based on the paraxial, slowly
+varying envelope approximation.  It includes diffraction, refraction,
+relativistic self-focussing, electron density cavitation via the 
+radial ponderomotive force, and field ionisation for hydrogen and
+helium gas targets.  It does NOT include any fast-timescale or kinetic
+physics such as plasma wave generation, particle acceleration, parametric
+instabilities etc.  (To model these things you should use a 2D
+particle-in-cell code instead.)  
+
+DRELP offers an easily accessible, optics-based approach to
+relativistic laser propagation in underdense plasmas, comparable to 
+hydrodynamics modelling of laser interaction with solids.  The code
+takes actual experimental laser and target conditions as input
+parameters, and provides a guide to propagation behaviour near
+the critical self-focussing power. 
+
+A detailed description of the model equations, the numerical scheme
+and some examples of its use in simulating relativistic laser channeling
+can be found in the paper by Gibbon et al., Phys. Plasmas 2, 1305
+(1995).
+
+The present version is written in standard fortran-77 and will compile
+on a standard Linux-PC with the GNU g77 compiler.  To compile, change
+to the directory where the source was unpacked (eg: $HOME/propag/ )and type:
+
+> cd src
+> make drelp
+
+If you use a different compiler (eg. ifc from Intel), you will need to
+change some of the flags in the makefile accordingly.
+
+Example scripts are provided in run_scripts/ which perform additional
+chores such as creating run a directory, copying a set of input
+parameters into a namelist file, and renaming some of the output
+files.   These can be freely adapted to the user's needs and directory
+structure. 
+
+Before running a script, change the TOP variable to your installation
+directory ($HOME/propag by default).
+
+Run the script with, eg:
+
+> run_scripts/vacuum
+ 
+Sample plots generated with these scripts are provided in the example_plots/ 
+directory.  The first 3 examples below use the `steady state' mode - 
+infinite pulse length, variation in (r,z) only.  The last 2 include 
+ionization, assume a finite pulse length, and compute the propagation
+dynamics of the whole pulse in (r,z,t).
+
+
+	Script		Description					Plots
+-----------------------------------------------------------------------------
+
+	vacuum		Gaussian beam focussed to 10			vacuum.ps
+			micron spot in `vacuum' (low
+			plasma density).  All nonlinear
+			effects switched off.
+
+	self-focus	Relativistic self-focussing in uniform
+			plasma (electron density = 10^19 cm^-3) with
+			laser power P = 6Pc.
+			i) Ponderomotive force turned off:		6pc_nofpond.ps
+			ii) Including ponderomotive channeling:		6pc+fpond.ps
+
+	
+	fixed-profile	Laser beam focussed onto a 'preformed',		channel+profile.ps
+			finite-length plasma profile with tapered 
+			edges (typical gas-jet configuration).
+			Note the explosive diffractive behaviour
+			when the beam exits the channel at the rear.
+
+
+	ionize		Ionization defocussing in hydrogen at		ionize_hydrogen.ps
+			different gas fill pressures. 
+			The parameters correspond roughly to those
+			used in the paper by Stewart Rae,
+			Optics Commun. 97, 25 (1993).
+
+	helium		Ionization and refraction in helium (Z=2).	he_histories.ps
+			Illustrates 2-stage field ionization, giving	he_2d.ps
+			step-like jumps in the electron density		he_radial.ps
+			profile. 					he_longitudinal.ps
+

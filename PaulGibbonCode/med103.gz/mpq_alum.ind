@@ -1,0 +1,25 @@
+ Aluminium slab (1 micron) on mylar plastic (10 micron)
+
+ Laser:
+       500J, 0.4ns fwhm, spot diameter=200 microns
+       Intensity = 9e14 W/cm**2 @ 0.43 mu  
+  
+ 
+***************************************
+ $newrun
+  xamda1 = .43e-6,   gauss = 1.0,     anpuls = 1.0,     toff = 0.1,
+  plenth = 0.25e-9,  pmax = 9.e18,    pmult = 3.,
+  ngeom = 1,         piq(55) = 0.,    teini = 1.e4,     tiini = 1.e4,
+  mesh = 60,         rini = 10.e-6,   rhogas = 1390.,   rf1 = 0.7,
+  xz = 4.5,          xmass = 8.7,     fne = 1.0,
+  zglas = 40.,       drglas = 1.e-6,  roglas = 2690.,   rf2 = 0.999,
+  xz2 = 13.,         xmass2 = 27.,    fne2 = 1.0,
+  zplas = 0.,        drplas = 0.e-0,  roplas = 0.,      rf3 = 0.,
+  xz1 = 0.,          xmass1 = 0.,     hydrog = 0.,
+  nprnt = -20,	tstop=3.e-9,	nrun=80000,
+  np3 = 1,	nlemp=f,
+  nlbrms = t,	flimit = 10.,	saha = 2.0,
+  anabs = 0.2,	fhot = 0.0,	fthot = -1.,	rhot = 1.0,
+  state = 0.0,	nlpfe = f,	ifrsta=1, ilosta=0, ihista=8,
+  nt1 = 21,  nt2 = 60
+ $end	

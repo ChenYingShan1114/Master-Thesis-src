@@ -1,0 +1,47 @@
+! new page
+size 15 10 
+set font rm
+begin translate   13.   22.
+ set hei .5
+ set font rmb
+! begin text
+!Fig. 5
+! end text
+end translate
+
+begin translate   1.0000E+00   1.
+!begin scale .63 .63
+pi = 3.141
+
+begin graph 
+	size 13 8 
+	nobox
+	ytitle "     A = 1-R  " 
+	xtitle "     \theta     " 
+        xaxis min 0. max 90. nticks 6
+        yaxis min 0. max 1 nticks 5
+	xlabels hei 0.5
+	ylabels hei 0.5 
+        xticks length .08
+        yticks length .08
+	data abs_theta.dat
+	data abs_theta_fresnel.dat
+        d1 line lstyle 2 
+        d2 line lstyle 2 
+	d3 line lstyle 1
+	d4 line lstyle 1
+! alpha
+	let d5 = sin(pi*x/180.)^2/cos(pi*x/180.) from 0. to 89. step 1
+	let d6 = 4*pi*d5/(pi+d5)^2
+	d6 line lstyle 1 color red  key "Brunel, a_0>>1"
+end graph
+
+begin key
+hei .4
+position tl
+text "Helmholtz" line lstyle 2
+text "Fresnel" line lstyle 1
+end key
+!end scale
+
+end translate

@@ -1,0 +1,86 @@
+Wed Mar 22 15:02:04 MET 2000
+
+
+
+
+
+
+
+ &newrun
+  xamda1 = 8e-07
+  gauss = 1.0
+  anpuls = 1
+  pmax = 1e+19
+  xaser1(38) = 0
+  xaser1(39) = 0
+  xaser1(40) = 0
+  xaser1(41) = 0
+  plenth = 1.5e-13
+  xaser1(42) = 0
+  xaser1(43) = 0
+  xaser1(44) = 0
+  xaser1(45) = 0
+  pmult = 2.0
+  xaser1(46) = 0
+  xaser1(47) = 0
+  xaser1(48) = 0
+  xaser1(49) = 0
+  ngeom = 1
+  teini = 1160
+  tiini = 1160
+  flimit = 10
+  nlpfe = t
+  state = 3.0
+  saha = 1.0
+  piq(92) = 0.5
+  piq(93) = 0.5
+  piq(94) = 0.5
+  piq(85) = 0.5
+  piq(88) = 0.5
+  piq(91) = 0.5
+  pondf = 0.0
+  nlcri1 = t
+  anabs = 0.6
+  fhot = 0.0
+  fthot = -1.0
+  rhot = 1.0
+  rini = 1e-06
+  rhogas = 1390
+  xz = 4.5
+  xmass = 8.7
+  drglas = 1e-06
+  roglas = 1390
+  xz2 = 4.5
+  xmass2 = 8.7
+  drplas = 0
+  roplas = 0
+  xz1 = 0
+  xmass1 = 0.0
+  mesh = 50
+  zglas = 0
+  zplas = 0
+  rf1 = 0.9
+  rf2 = 0.999
+  rf3 = 0.0
+  piq(55) = 0.0
+  tstop = 5e-12
+  nprnt = -1.0
+  dtmax = 1e-14
+  toff = 0.1
+  nlabs = t
+  nlbrms = t
+  nlhf = t
+  nltnl = f
+  nlburn = f
+  nldepo = f
+  nlecon = t
+  nlicon = t
+  nlfuse = t
+  nlpfi = t
+  nlx = t
+  fne = 1.0
+  fne2 = 1.0
+  nrun = 1000000
+  nlemp = f
+  np3 = 1
+ &end

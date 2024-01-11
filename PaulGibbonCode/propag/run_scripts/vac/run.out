@@ -1,0 +1,156 @@
+
+
+
+  DRELP  run on  23/12/2022
+Start time:  14:36     GMT+0800
+ Initial phase   0.00000000    
+
+Laser-plasma parameters
+=======================
+
+Pulse length (fs)           50.00 =       116.28 w0**-1
+Spot size (mu)               5.93
+Intensity  (Wcm-2)      8.000E+16
+Irradiance (Wcm-2mu2)   5.249E+16
+Background density:      5.00E+15
+Critical density n_c:    1.52E+21
+Plasma length (mu):       500.00
+Leading edge (mu):        600.00
+Target gas:                   He
+Laser power (TW)           0.0881
+Pcrit (TW)                2975.31
+P/Pc:                      0.0000
+n_e/n_c:                 5.88E-06
+Cavitation Dn_e/n_e:     1.00E+00
+
+Focussing:
+==========
+
+Rayleigh length (mu):      272.977
+f-number                    10.000
+Focal length: (mu)         200.000
+Lens width:   (mu)          20.000
+Initial spot (mu):            7.35
+Initial Intensity:       5.21E+16
+
+
+Power contours at:
+          0.000
+          0.000
+          0.000
+          0.000
+
+Mesh for (r,z) plots:
+    29   201
+  Plot region (mu):      50.0000 x    1500.0000
+
+Other parameters (code units):
+
+     nt    2999
+     nr     400
+     nz       2
+     dt        3.879
+   dtem        3.761
+   izsu        0.000
+ icycem       1
+     rl     1551.40
+     zl        7.76
+     dr        3.8785
+     dz        3.8785
+ Zrmass        0.0005
+   wp0         0.002
+  a0(f)        0.195
+ Io(18)        0.080
+   tau        69.77
+   t0          7.76
+  sigma       46.02
+ sigma0       46.02
+  f #         10.0
+  Rfoc      1551.4
+   D         155.1
+   Zray     2117.5
+ min dr        3.88
+ max dt        3.76
+  melec       0
+  igrid       1
+  wa0         17.93
+  Ea0          0.13
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+pulse00.snap     2   200
+rhoi00.snap      2   100
+ plasma front edge (mu)   600.000061      end    1100.00012    
+ plasma front edge (mu)   500.002319      end    999.996948    
+ plasma front edge (mu)   400.004608      end    899.999207    
+ plasma front edge (mu)   300.006897      end    800.001465    
+pulse01.snap     2   200
+rhoi01.snap      2   100
+ plasma front edge (mu)   200.007141      end    700.003784    
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+ plasma front edge (mu)   100.006775      end    600.006042    
+ plasma front edge (mu)   6.97132712E-03  end    500.008301    
+ plasma front edge (mu)  -99.9928360      end    400.010590    
+pulse02.snap     2   200
+rhoi02.snap      2   100
+ plasma front edge (mu)  -199.993195      end    300.012878    
+ plasma front edge (mu)  -299.992950      end    200.013123    
+emar2.xy    
+emaz2.xy    
+emph2.xy    
+rher2.xy    
+natz2.xy    
+rhez2.xy    
+ni1z2.xy    
+ni2z2.xy    
+ni0z2.xy    
+ plasma front edge (mu)  -399.990662      end    100.012749    
+ plasma front edge (mu)  -499.988403      end    1.29434308E-02
+pulse03.snap     2   200
+rhoi03.snap      2   100
+ plasma front edge (mu)  -599.986145      end   -99.9868622    
+ plasma front edge (mu)  -699.983887      end   -199.987228    
+ plasma front edge (mu)  -799.981567      end   -299.986969    
+pulse04.snap     2   200
+rhoi04.snap      2   100
+
+
+Loop timing (in seconds):
+------------------------
+ total         0.59
+     em        0.42
+ plasma        0.00
+ ioniz         0.00
+   diag        0.13
+ loop          0.000
+
+
+emac0.xy    
+rmsb0.xy    
+rpo20.xy    
+hami0.xy    
+i0r00.xy    
+a2r00.xy    
+aphi0.xy    
+rer00.xy    
+nar00.xy    
+n0r00.xy    
+n1r00.xy    
+n2r00.xy    
+a2ne0.xy    
+rhet0.xy    
+Finished run at time:  14:36

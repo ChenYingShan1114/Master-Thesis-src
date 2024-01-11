@@ -1,0 +1,181 @@
+
+
+
+  DRELP  run on  05/11/2022
+Start time:  11:02     GMT+0800
+ Initial phase   0.00000000    
+Focussing length:      4858.045 =       618.55 microns
+
+Laser-plasma parameters
+=======================
+
+Pulse length (fs)           80.00 =       188.37 w0**-1
+Spot size (mu)              10.00
+Intensity  (Wcm-2)      6.366E+17
+Irradiance (Wcm-2mu2)   4.074E+17
+Background density:      2.00E+19
+Critical density n_c:    1.56E+21
+Plasma length (mu):      1000.00
+Leading edge (mu):        500.00
+Target gas:                   He
+Laser power (TW)           1.9920
+Pcrit (TW)                   0.76
+P/Pc:                      2.6123
+n_e/n_c:                 2.29E-02
+Cavitation Dn_e/n_e:     1.04E-03
+
+Focussing:
+==========
+
+Rayleigh length (mu):      785.397
+f-number                     5.000
+Focal length: (mu)         500.000
+Lens width:   (mu)         100.000
+Initial spot (mu):           11.85
+Initial Intensity:       4.53E+17
+
+Focussing length:      4858.045 =       618.55 microns
+
+Power contours at:
+          0.500
+          0.640
+          0.700
+          0.860
+
+Mesh for (r,z) plots:
+    80   101
+  Plot region (mu):      50.0000 x    2000.0000
+
+Other parameters (code units):
+
+     nt    2000
+     nr     200
+     nz     200
+     dt        7.854
+   dtem       15.421
+ icycem       1
+     rl     1570.80
+     zl     1570.80
+     dr        7.8540
+     dz        7.8540
+ Zrmass        0.0100
+   wp0         0.151
+  a0(f)        0.543
+ Io(18)        0.637
+   tau       113.02
+   t0        785.40
+  sigma       78.54
+ sigma0       78.54
+  f #          5.0
+  Rfoc      3927.0
+   D         785.4
+   Zray     6168.5
+ min dr        7.85
+ max dt       15.42
+  melec       1
+  igrid       1
+  wa0         17.70
+  Ea0          0.13
+emar0.xy    
+emaz0.xy    
+emph0.xy    
+rher0.xy    
+natz0.xy    
+rhez0.xy    
+ni1z0.xy    
+ni2z0.xy    
+ni0z0.xy    
+pulse00.snap   100   100
+rhoi00.snap    100    50
+ plasma front edge (mu)   500.000000      end    1500.00000    
+ plasma front edge (mu)   399.999634      end    1400.00586    
+ plasma front edge (mu)   299.999268      end    1300.01172    
+ plasma front edge (mu)   199.998901      end    1200.01758    
+ plasma front edge (mu)   99.9985352      end    1100.02344    
+emar1.xy    
+emaz1.xy    
+emph1.xy    
+rher1.xy    
+natz1.xy    
+rhez1.xy    
+ni1z1.xy    
+ni2z1.xy    
+ni0z1.xy    
+pulse01.snap   100   100
+rhoi01.snap    100    50
+ plasma front edge (mu)  -1.57877675E-03  end    1000.02655    
+ plasma front edge (mu)  -100.001694      end    900.026184    
+ plasma front edge (mu)  -200.002060      end    800.025818    
+ plasma front edge (mu)  -300.002411      end    700.025452    
+ plasma front edge (mu)  -400.002777      end    600.025085    
+emar2.xy    
+emaz2.xy    
+emph2.xy    
+rher2.xy    
+natz2.xy    
+rhez2.xy    
+ni1z2.xy    
+ni2z2.xy    
+ni0z2.xy    
+pulse02.snap   100   100
+rhoi02.snap    100    50
+ plasma front edge (mu)  -500.003143      end    500.024719    
+ plasma front edge (mu)  -600.003479      end    400.024353    
+ plasma front edge (mu)  -700.003845      end    300.023987    
+ plasma front edge (mu)  -800.004211      end    200.023605    
+ plasma front edge (mu)  -900.004578      end    100.023247    
+emar3.xy    
+emaz3.xy    
+emph3.xy    
+rher3.xy    
+natz3.xy    
+rhez3.xy    
+ni1z3.xy    
+ni2z3.xy    
+ni0z3.xy    
+pulse03.snap   100   100
+rhoi03.snap    100    50
+ plasma front edge (mu)  -1000.00494      end    2.31337789E-02
+ plasma front edge (mu)  -1100.00183      end   -99.9769821    
+ plasma front edge (mu)  -1199.99597      end   -199.977341    
+ plasma front edge (mu)  -1299.99011      end   -299.977692    
+ plasma front edge (mu)  -1399.98425      end   -399.978058    
+emar4.xy    
+emaz4.xy    
+emph4.xy    
+rher4.xy    
+natz4.xy    
+rhez4.xy    
+ni1z4.xy    
+ni2z4.xy    
+ni0z4.xy    
+pulse04.snap   100   100
+rhoi04.snap    100    50
+ plasma front edge (mu)  -1499.97839      end   -499.978424    
+
+
+Loop timing (in seconds):
+------------------------
+ total        22.88
+     em       17.88
+ plasma        0.32
+ ioniz         4.38
+   diag        0.12
+ loop          0.011
+
+
+emac0.xy    
+rmsb0.xy    
+rpo20.xy    
+hami0.xy    
+i0r00.xy    
+a2r00.xy    
+aphi0.xy    
+rer00.xy    
+nar00.xy    
+n0r00.xy    
+n1r00.xy    
+n2r00.xy    
+a2ne0.xy    
+rhet0.xy    
+Finished run at time:  11:02

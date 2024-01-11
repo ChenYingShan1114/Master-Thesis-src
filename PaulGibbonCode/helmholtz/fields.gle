@@ -1,0 +1,52 @@
+! new page
+size 19 12
+
+set hei .5 lwidth .06
+
+set font psh
+begin translate -1 0
+begin graph
+size   21 13
+
+data field.dat
+!data field_0.dat
+
+nobox
+!xaxis min 0 max 20
+yaxis min 0 max 20
+!yaxis min .01 max 150 log
+xlabels hei  .6
+ylabels hei  .6
+y2axis on nticks 4
+y2labels
+y2axis 
+xticks
+yticks 
+title "   " hei 0.6 font rmi
+ytitle "     Field strength        "
+xtitle "      k_0x     "
+y2title " n/n_c" hei 0.6
+key position tr nobox
+!d2 line color green lstyle 1 key "Ez"
+!d3 line color blue key "Bz"
+!d4 line color red key "Ex"
+d7 line color blue key "E_z^2"
+d8 line lstyle 2 color black key "B_y^2"
+let d19 = d9/2
+d9 line lstyle 9 color red key "E_x^2"
+!data field1.dat
+!d10 line lstyle 2 color black
+let d10 = d1
+d10 line color black                     
+end graph
+set lstyle 9
+set lstyle 1 
+amove xg(11.5) yg(3)
+!text x_{sol}
+
+
+
+end translate
+
+
+

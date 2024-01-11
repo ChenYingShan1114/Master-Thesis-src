@@ -1,0 +1,106 @@
+
+
+This is the README file for the Particle-in-Cell tutorial ESPIC.
+---------------------------------------------------------------
+
+ESPIC - ElectroStatic PIC - is a one-dimensional particle-in-cell
+code designed for teaching purposes.  It is closely based on the model
+described in the book by Birdsall & Langon.
+
+Various versions of the code are available in both C and Fortran-90,
+together with tutorial exercises of increasing complexity, providing 
+training in PIC simulation of nonlinear laser-plasma simulation.
+ 
+
+Compiling ESPIC
+--------------
+
+The directory structure resulting from unpacking the tar files should look
+like this:
+
+	f90		...	containing the fortran90 source code (basic version)
+	C		...	containing the C source code (basic)
+	master_f90	...	extended fortran90 version
+	master_c	...	extended C version
+	
+The .gle files are scripts for the GLE plotting program.
+The multiplot.gnu example file shows how to plot several graphs per page.
+	
+Depending on the language, the source directories contain a number of files with
+.f90, .c and .h extensions.  These have the following purpose:
+
+      espic	       Main driver program
+      init	       Variable and parameter initialisation
+      loadx	       Set up particle positions
+      loadv	       Set up particle velocities
+      push	       Update particle velocities
+      boundaries       Check particle boundary conditions
+      density	       Compute charge density on grid from particle positions
+      field	       Compute electric field from charge density
+      diagnostics      Compute/write out particle and field diagnostics	
+      plots	       Write out graphical diagnostic data
+      es.h	       Parameter definitions
+
+To compile, go to the desired source directory and change the makefile 
+to suit your compiler.  
+
+For the Fortran version, type:
+
+	cd f90
+	<edit> makefile
+	FC=ifort         # selects the Intel compiler
+	
+Then compile the code with:
+
+	make espic
+	
+
+For the C version, type:
+
+	cd C
+	<edit> makefile
+	FC=cc         # selects the default (usually GNU) C-compiler
+	
+Then compile the code with:
+
+	make espic
+	
+
+
+
+Running ESPIC
+------------
+
+To get started, see the tutorial described in Worksheet 5.
+
+
+
+Example scripts
+---------------
+
+
+
+
+------------------------------------------------------------------------
+DISCLAIMER
+
+This code is a scientific tool and should not be used for commercial purposes.
+The author makes no guarantee of the correctness of results obtained with 
+this code: it is up to the user to ensure that they make physical sense and
+are not compromised by numerical instabilities etc.
+This package may be freely distributed for academic purposes.
+
+------------------------------------------------------------------------
+Last updated August 2005
+P. Gibbon
+
+
+
+
+
+
+
+
+
+
+

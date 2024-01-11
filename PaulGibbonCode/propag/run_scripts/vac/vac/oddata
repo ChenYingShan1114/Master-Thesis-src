@@ -1,0 +1,23 @@
+   500   401   1   1   0   1      r             |a|^2     emarz=-2000.0mu 
+  -200   401   1   1   0   1      r             ne        rherz=-2000.0mu 
+  0.0000E+00  5.0000E+01  3.0000E+01  0.0000E+00  1.5000E+00  5.0000E-01
+   501   401   1   1   0   1      r             |a|^2     emarz=-0.3mu    
+  -201   401   1   1   0   1      r             ne        rherz=-0.3mu    
+  0.0000E+00  5.0000E+01  3.0000E+01  0.0000E+00  1.5000E+00  5.0000E-01
+   502   401   1   1   0   1      r             |a|^2     emarz=1999.0mu  
+  -202   401   1   1   0   1      r             ne        rherz=1999.0mu  
+  0.0000E+00  5.0000E+01  3.0000E+01  0.0000E+00  1.5000E+00  5.0000E-01
+  5000   201   1   1   0   1  z (microns)     Action      emac            
+  5100   201   1   1   0   1  z (microns)  r_{1/e} (mu)   rmsb            
+  5150   201   1   1   0   1  z (microns)   r(P_0/2) (mu) rpo2            
+  5200   201   1   1   0   1  z (microns)       H         hami            
+  5350   201   1   1   0   1  z (microns)    I0/Wcm^{-2}  i0r0            
+  5300   201   1   1   0   1  z (microns)      I/I0(r=0)  a2r0            
+  5600   201   1   1   0   1  z (microns)      Phi(0,0)   aphi            
+  5400   201   1   1   0   1  z (microns)     n_e(r=0)    rer0            
+  5420   201   1   1   0   1  z (microns)   n_{gas}(r=0)  nar0            
+  5440   201   1   1   0   1  z (microns)     n_0         n0r0            
+  5450   201   1   1   0   1  z (microns)     n_i(1+)     n1r0            
+  5460   201   1   1   0   1  z (microns)     n_i(2+)     n2r0            
+  5500   201   1   1   0   1  z (microns)   Thomson (w0)  a2ne            
+  6000   201   1   1   0   1  z (microns)     Qtot        rhet            

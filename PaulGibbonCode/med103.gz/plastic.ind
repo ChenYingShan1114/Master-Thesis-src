@@ -1,0 +1,22 @@
+       Plastic CH bulk target, 1D 
+       100fs fwhm prepulse
+       Intensity = 1.e14 W/cm**2  @ 0.8 mu
+       Run time 1 ns             
+***************************************
+ $newrun
+  xamda1 = 0.8e-6,   gauss = 1.0,     anpuls = 1.0,     toff = 0.1,
+  plenth = 60e-15,  pmax = 1.e18,    pmult = 10.,
+  ngeom = 1,         piq(55) = 0.,    teini = 1.e4,     tiini = 1.e4,
+  mesh = 120,        rini = 15.e-6,   rhogas = 1000.0,   rf1 = 0.99,
+  xz = 3.5,          xmass = 6.5,     fne = 1.0,
+  zglas = 0.,       drglas = 1.e-6,  roglas = 2690.,   rf2 = 0.999,
+  xz2 = 13.,         xmass2 = 27.,    fne2 = 1.0,
+  zplas = 0.,        drplas = 0.e-0,  roplas = 0.,      rf3 = 0.,
+  xz1 = 0.,          xmass1 = 0.,     hydrog = 0.,
+  nprnt = -0.1, tstop=1.e-12,   nrun=80000,
+  np3 = 1,      nlemp=f, 
+  nlbrms = t,   flimit = 10.,   saha = 2.0,
+  anabs = 0.3,  fhot = 1.0,     fthot = -1.,    rhot = 1.0,
+  state = 0.0,  nlpfe = f,      ifrsta=1, ilosta=0, ihista=5,
+  nt1 = 1, nt2=60
+ $end   

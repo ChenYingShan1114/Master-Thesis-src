@@ -1,0 +1,1913 @@
+\batchmode
+\documentstyle[11pt]{article}
+\setlength{\textheight}{9.5in}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\parindent}{0.in}
+%\setlength{\parskip}{0.20in}
+%\setlength{\itemsep}{0.10in}
+%\setlength{\parsep}{0.20in}
+%\setlength{\topsep}{0.10in}
+ 
+%\setlength{\textwidth}{6.8in}
+%\setlength{\textheight}{10.2in}
+%\setlength{\topmargin}{+0.25in}
+\begin{document}
+%\begin{center}
+%\end{center}
+\vspace{1.5in}
+\begin{center}
+%{\Huge\bf {\sc MED}103: a laser-plasma\\
+{\Huge{\bf A user guide \\for the laser-plasma simulation code: MED103}}
+\end{center}
+\begin{center}
+{\LARGE A Djaoui}
+\end{center}
+\begin{center}
+{\Large Central Laser Facility, Rutherford Appleton Laboratory}
+\end{center}
+\vspace{1.5in}
+\begin{center}
+ABSTRACT
+\end{center}
+
+
+Many features have been added  to the
+laser plasma simulation code {\bf Medusa} \cite{cpc} over the last few years. 
+This was renamed {\bf Med101} \cite{med101} in 1989 and now {\bf Med103}.
+The new features in the latest version include: 
+the coupling of the energies involved  in the atomic processes of excitation, ionization, etc... 
+(in the non-LTE time-dependent average atom model)  to the
+free electron energy balance equation, which allows realistic
+simulations of rapidly heated plasmas found in  short-pulse high-intensity
+laser-produced plasmas. 
+The new version also  includes
+a high-field corrections to inverse bremsstrahlung absorption,
+tunnel ionization, a non-local  electron heat conduction subroutine
+as well as a package for the modelling of collisional  in addition to recombination x-ray lasers.
+Complete details for running this
+code are given including: an explanation of the
+input parameters, instructions for running on the Rutherford
+Appleton Laboratory DEC ALPHA (AXPRL2), UNIX farm (OSFSERV) and the 
+superscalar computer (COLUMBUS).
+The code is capable of simulating a wide range
+of laser-produced plasma experiments in 1 D planar, cylindrical or spherical
+geometry with a choice of ionization and equation of state models.
+  
+
+
+\newpage 
+\tableofcontents
+\newpage
+\section{Introduction}
+This document outlines recent modifications to the laser
+fusion code MED101 \cite{cpc,med101} (now renamed MED103).
+Like MED101, MED103 is a one dimensional Lagrangian hydrodynamic
+code which is capable of modelling a wider range of experiments.
+Improvements to the physics in the program include 
+\newline
+1) Coupling of the energies involved in excitation and ionization,
+when using the time-dependent average atom model,
+to the free electron energy balance equation\cite{djaoui1}. 
+This allows realistic simulations  of, for example, 
+high-Z targets where a large fraction 
+of the absorbed laser energy is consumed in the processes of
+excitation and ionization of the plasma. 
+\newline
+2) Calculation of Ne-like collisional X-ray laser gain \cite{djaoui1} in 
+addition to 
+H-like, Li-like and Na-like recombination schemes.
+Atomic data \cite{Bhatia}
+is available in the code for 27 levels 
+of 4 Ne-like ion configurations
+($2s^2 2p^6, 2s^2 2p^5 3s, 2s^2 2p^5 3p, 2s^2 2p^5 3d$)
+and for the following elements:
+Si(Z=14), 
+Ar(Z=18), Ti(Z=22), Fe(Z=26), Ge(Z=32) and Kr(Z=36).
+\newline
+3) A high field correction to inverse bremsstrahlung, 
+a non-local heat conduction subroutine \cite{djaoui2} as well
+as the option to switch on tunnel ionization (This is useful 
+for the simulation of short pulse high intensity laser interaction with gas 
+targets).
+\newline
+4) More control over the initial conditions of the beam/target and over the simulation.
+For example it is now possible to specify the maximum time step DTMAX used by the
+code (useful for the simulation of very short pulses). 
+It is also possible to restart the code from where it left off in a previous run 
+with the possibility of changing irradiation conditions (laser wavelength for example).
+\newline
+5) When dealing with
+multiple Gaussian pulse irradiation  with largely different pulse lengths ( ie.  
+a femtosecond pulse following  a nanosecond ASE prepulse), 
+it is no longer necessary to use a small value of DTMAX
+to perform the simulation. 
+The code 'looks ahead' for short pulses and adjusts the time step so as to sample
+the short pulse adequately.
+
+ 
+The source code for MED103 has also been 'cleaned-up' and some 
+errors corrected.
+MED103 now compiles and runs 
+on COLUMBUS, the UNIX farm (OSFSERV), and DEC 
+ALPHA (AXPRL2) without any modifications.
+ 
+There are four different NAG/GKS graphics programs to post-process MED103
+output:
+\newline
+1) FLIP3 --- this is the most useful and it plots 
+the hydrodynamic variables (velocity, mass density, electron
+density, pressure, electron and ion temperatures,
+and average ionization) vs.\ distance
+for different times, and also the hydrodynamic variables
+(cell coordinates plus velocity etc.)\ vs.\ time
+for each cell
+\newline
+2) ION3 --- this plots the ground state number density
+of the different ionization stages vs.\ distance at
+different times during the interaction.
+ION3 also displays the zoning of the run. This can be useful to
+ensure that there are enough cells in the regions of interest
+\newline
+3) XRLREC3 --- this plots the recombination X-ray laser gain vs.\
+distance at different
+times, and also the space-integrated gain for different
+lines (i.\ e.\ alpha, beta etc.)\ vs.\ time as would
+as measured by experiment.
+\newline
+4)XRLCOL3
+this plots the Ne-like collisional X-ray laser gain vs.\
+distance at different
+times.
+\newline
+ 
+Each graph has a panel at the top containing details
+of the input data used for that particular run.
+The graphics packages were written initially to run on the old IBM and use
+NAG GKS routines. They produce postscript files  which can 
+be viewed on any X-windows display using {\bf ghostview} and either
+printed at Rutherford or transferred to the user's local site and
+printed on a local postscript printer. 
+
+\newpage 
+\section{Getting started}
+
+If you don't already have an account on the Unix farm (OSFSERV) or the DEC ALPHA
+(AXPRL2) contact the Theory
+and Computation group at the Central Laser Facility (telephone:
+01235 445481/446344). Information and documentation on the available computing
+services can be found on the word wide web (http://www.cis.rl.ac.uk/services.html)
+
+In the following sections 
+commands that exist in batch or script files or commands that can be typed in
+by the user will be printed
+\begin{verbatim}
+IN THIS TYPEFACE or this typeface
+\end{verbatim}
+
+\subsection{ A note  to users of MED101}
+When implementing any modification to the code, I have tried to do it
+in a way which leaves the code upward compatible (i.e it can
+run old data sets without any changes). This philosophy has been
+adhered to, except for the use of the variable SAHA. In MED101,
+when the X-ray laser calculation is switched on (ICXRL=1) the code
+automatically uses the time dependent non-LTE ionization (Z*) from the solution
+to the non-LTE average atom model rate equations. {\bf In MED103 it is
+necessary to set (SAHA=2.0) for the code to calculate the ionization
+from the non-LTE average atom rate equations independently of  the value of ICXRL}.
+The ionization energy is  also calculated and included in the solution
+to the free electron energy balance equation.
+With SAHA=2,   either the perfect
+gas (NLPFE=T) or the degenerate gas (NLPFE=F, STATE=0) equations of state
+may be used.
+
+If the user mixes the non-LTE model (SAHA=2) with the LTE
+Thomas Fermi equation of state
+(NLPFE=F and STATE=1, 2 or 3) either inadvertently or purposefully
+the code will calculate the ionization
+energy from the non-LTE model while the pressure is calculated from the TF model.
+This choice is arbitrary and is {\bf thermodynamically inconsistent}. Therefore this is not advised.
+Typical settings of SAHA, NLPFE, STATE, ICXRL are given in the examples
+in this manual.
+                                                            
+An example input data file  (FPAP2.DAT) for the modelling of the
+x-ray laser experiment is shown next. A similar example  was also given in the med101
+manual\cite{med101}.
+\begin{verbatim}
+FLUORINE FIBRE (med103 version: saha=2.0)
+0.53 microns, 3.5e12 W/m/rad, 70 ps FWHM,
+8 micron diameter, perfect gas EOS
+************************************************
+ $NEWRUN
+ XAMDA1=0.53E-6, GAUSS=1.0,    ANPULS=1.0,  TOFF=1.0,
+ PLENTH=4.2E-11, PMAX=3.50E12, PMULT=2.381,
+ NGEOM=2,        PIQ(55)=0.0,  TEINI=300.0, TIINI=300.0,
+   MESH=50,   RINI=4.E-06,    RHOGAS=2635.0, RF1=0.9000,
+   XZ=9.0,    XMASS=19.0,     FNE=1.0,
+     ZGLAS=0.0, DRGLAS=0.0E-06, ROGLAS=0.0,    RF2=0.9999,
+     XZ2=0.0,   XMASS2=0.0,     FNE2=1.0,
+      ZPLAS=0.0, DRPLAS=0.00E-0, ROPLAS=0.0,    RF3=0.9999,
+      XZ1=0.0,   XMASS1=0.0,     HYDROG=0.0,
+ NPRNT=-100, TSTOP=1.E-09,  NRUN=999999,
+ NP3=1,     NLEMP=F,
+ NLBRMS=T,  FLIMIT=10.0,
+ ANABS=0.2, FHOT=0.0,       FTHOT=-1.0,    RHOT=1.0,
+ STATE=0.0, NLPFE=t,       saha=2.0,
+ ICXRL=1,  IFRSTA=1, ILOSTA=0,   IHISTA=3,
+ ISTAGE=1, IDFLG=0,  ROPMUL=1.0,  ITBFLG=1, ISTFLG=0,
+ IPUFLG=0, TPON=2.15E-10,        TPOFF=2.85E-10,
+ NLP=1,    NUP=3,    RMPD=0.002, DLAMDA=81.0E-08,
+ NLMAX=2,  FLSHORT=0.0001,       FLLONG=0.55,
+  nlres=f,
+ $END
+\end{verbatim}
+
+
+\subsection{What is needed to run the code}
+ 
+To run MED103 you will need an input data file. An example for the simulation
+of a recombination x-ray laser experiment was given above. Another example
+(AL100FS.DAT) is given below. 
+This specifies an Al target which is irradiated by a 100 fs, $10^{17} W/cm^2$ pulse which is
+preceeded by an ASE prepulse of 1 ns duration and $10^{11} W/cm^2$ peak intensity. Both pulses peak at 
+1 ns (simulation time). The meaning of all
+the input parameters is explained in 'Explanation of the input parameters' section. A third example 
+for the simulation of a Ne-like x-ray laser experiment is also given in 'Changing the input data' section .
+
+\begin{verbatim}
+AL100FS: Al TARGET  PLANAR GEOM 0.268UM
+2 PULSES: 100 FS, 1.E17 W/CM^2 ON TOP OF 1NS 1.E11 W/CM2 ASE
+DEGENERATE  GAS, E BALANCE, ANABS=0.25
+************************************************************************
+ $NEWRUN
+ XAMDA1=0.268E-6, TON=0.,  TOFF=1.,
+ GAUSS=1.0, ANPULS=2.0,
+ PMAX=1.E15, PLENTH=0.6E-09, PMULT=1.6666666667,
+ XASER1(38)=1.E21, XASER1(42)=60E-15, XASER1(46)=16666.66667,
+  NGEOM=1,        PIQ(55)=2.0,
+   MESH= 65,   RINI=4.5E-6,    RHOGAS=2700., RF1=0.9999,
+   XZ=13.,    XMASS=27.,   FNE=1.0,
+    ZGLAS= 20., DRGLAS=.5000E-06, ROGLAS=2700.,  RF2=0.8711,
+    XZ2=13.0,   XMASS2=27.00,   FNE2=1.0,
+     ZPLAS=00., DRPLAS=0.00E-06, ROPLAS=2700.,  RF3=0.9999,
+     XZ1=13.,   XMASS1=27.,   HYDROG=0.0,
+   TEINI=11604.5000,  PIQ(86)=11604.50,  PIQ(89)=11604.50,
+   TIINI=11604.500,  PIQ(87)=11604.50,  PIQ(90)=11604.50,
+   PIQ(92)=1.,    PIQ(93)=1.,     PIQ(94)=1.,
+   PIQ(85)=1.,    PIQ(88)=1.,     PIQ(91)=1.,
+ NLHF=T, NLTNL=T, NLOMT3(10)=T, FLIMIT=10.,
+ NLBRMS=T, 
+ NLCRI1=T,  ANABS=0.25,   FHOT=0.0, FTHOT=-1.0, RHOT=1.0,
+ NLPFE=F,    STATE=0.0, SAHA=2.0,
+   ICXRL=0,  ISTAGE=1,
+   IFRSTA=1, ILOSTA=0,   IHISTA=3,
+   IDRFLG=0, DRMUL=1.0,
+ NLRES=F,
+ NPRNT=100.,  TSTOP=1.1E-9, NRUN=999999, DTMAX=1.E-11,
+ NP3=1,     NLEMP=F,
+ $END
+\end{verbatim}
+ 
+You will also need a  command  (DCL) file to run on the DEC ALPHA 
+or  a script file to run on the 
+UNIX farm or COLUMBUS. Examples of these files are given in the following  sections.
+Copies of all the files  listed in this manual can be obtained from directory DISK$\_$USER3:[AD1.PUBLIC]
+on machine AXPRL2.RL.AC.UK.
+
+\subsection{Running on the DEC ALPHA}
+The TCP/IP address for DEC ALPHA is AXPRL2.RL.AC.UK (or 130.246.12.10). In addition to the input
+data file,
+a DCL command file is needed to run med103
+on  the DEC ALPHA. An example   is listed below. 
+
+\begin{verbatim}
+! COMMAND FILE MED103.COM TO RUN MED103 ON AXPRL2
+$SET DEFAULT DISK_USER3:[AD1.MED103]
+$FORTRAN/REAL_SIZE=64/ALIGN=ALL MED103
+$LINK/EXECUTABLE=MED103 MED103
+$ASSIGN AL100FS.DAT                             FOR005
+$CREATE/DIRECTORY WEEK_DISK:[PUBLIC.WEEK.AD1]
+$ASSIGN WEEK_DISK:[PUBLIC.WEEK.AD1]OAL100FS.OUT FOR006
+$ASSIGN WEEK_DISK:[PUBLIC.WEEK.AD1]XAL100FS.OUT FOR011
+$ASSIGN WEEK_DISK:[PUBLIC.WEEK.AD1]IAL100FS.OUT FOR012
+$ASSIGN WEEK_DISK:[PUBLIC.WEEK.AD1]FAL100FS.OUT FOR013
+$ASSIGN WEEK_DISK:[PUBLIC.WEEK.AD1]RAL100FS.OUT FOR015
+$DELETE *.LIS;*
+$DELETE *.OBJ;*
+$DELETE *.MAP;*
+$RUN MED103
+$DELETE MED103.exe;*
+$DEASSIGN FOR005
+$DEASSIGN FOR006
+$DEASSIGN FOR011
+$DEASSIGN FOR012
+$DEASSIGN FOR013
+$DEASSIGN FOR015
+$EXIT
+\end{verbatim}
+
+The first line is a comment line. The next line 
+sets the default working directory to the directory where
+MED103.FOR and the input data are kept on the DEC ALPHA. You will have to change 
+this to point to the directory where you keep your files.
+The next two lines compile and link 
+the code. the executable file is given the name  MED103.
+The next line assigns an input data file  to fortran stream 5
+so it can be read by the code.
+MED103 reads its input from stream 5. In
+this case the input file is AL100FS.DAT.
+
+The next line creates a subdirectory on WEEK$\_$DISK for writing the output.
+In this version of the command file all the output from the code is 
+written in the temporary directory WEEK$\_$DISK. Files in this directory are inspected at
+midnight each night and are deleted if they are more than 7 days old.
+If you want to keep any of the files 
+in the WEEK directory you should copy them to your own disk space.
+The next 6 lines assign the streams to various
+output file names. 
+MED103 produces a number of output
+files depending on the input. Data is always output
+on stream 6 (OAL100FS.OUT in this case), stream 13
+(FAL100FS.OUT) and stream 15 (RAL100FS.OUT). 
+OAL100FS.OUT will contain
+details of the input data and defaults
+set by the program plus all the output data in an easy-to-read form
+(see section 3 for some sample output).
+FAL100FS.OUT contains the hydrodynamic
+variables in a form suitable for the graphics package FLIP3.
+Stream 12 (IAL100FS.OUT)
+contains the ionization data in a form suitable for ION3.
+Stream 11 (XAL100FS.OUT) contains the X-ray laser output in a
+form suitable for the graphic package XRLREC3 or XRLCOL3.
+Streams 15 is used for the restart feature.
+The code dumps all variables specifying the target on stream 15 (RAL100FS.OUT) (every time
+it produces an output on stream 6). 
+When restarting a previous run the code reads the necessary variables from stream 15. 
+
+The next 3 lines clear some disk space by deleting
+files which were created during the compilation and link stage and
+are no longer needed. The next line runs the programme.
+The following line deletes the executable file MED103.
+If you do not want to recompile the code every time you run it,
+you can keep the executable file MED103 by putting a comment (!)
+in front of it. The next 7
+lines deassign all the fortran streams and finally  the jobs terminates.
+
+Batch jobs are submited to the DEC ALPHA using the standard DCL
+command SUBMIT. 
+To run this DCL command file as a batch job you will have to enter something like
+\begin{verbatim}
+SUBMIT/QUEUE=LONGQ/NOTIFY MED103
+\end{verbatim}
+
+Almost immediately you will be sent a message.
+\begin{verbatim}
+JOB MED103 (QUEUE LONGQ, ENTRY 205) PENDING
+     PENDING STATUS CAUSED BY QUEUE STOPPED STATE
+\end{verbatim}
+
+205 is the job number. If for some reason you decide to cancel
+this job type
+\begin{verbatim}
+DELETE/ENTRY=205 LONGQ
+\end{verbatim}
+If the job is already executing you should specify LONGQ$\_$EXEC instead of LONGQ as in
+\begin{verbatim}
+DELETE/ENTRY=205 LONGQ_EXEC
+\end{verbatim}
+
+When the job starts running a LOG file
+MED103.LOG is created in your top directory.
+Any error messages (total amount of CPU time used when the job finishes)
+are written to this file.
+
+You can find out about the status of your batch job by typing
+\begin{verbatim}
+SHOW QUEUE/BATCH
+\end{verbatim}
+
+The queue LONGQ has a maximum time limit of 6 hours.
+To allow for batch jobs requiring different resources,
+a number of different queues are available.
+You can  find out the names, limits etc ...  of the other queues by
+typing 
+\begin{verbatim}
+SHOW QUEUE/BATCH/FULL
+\end{verbatim}
+this will list all the queues and also give
+you the maximum amount of CPU time allowed on any one queue.
+
+When the job has finished you will be sent a message such as
+\begin{verbatim}
+JOB MED103 (QUEUE LONGQ_EXEC, ENTRY 250) COMPLETED
+\end{verbatim}
+Any output files will be sent to the files specified in the ASSIGN statements above.
+More help on the different commands can be obtained interactively using HELP. for example
+\begin{verbatim}
+HELP SUBMIT
+\end{verbatim}
+There are also a number of online documents including a user's guide for the Alpha. To find out the list of 
+available documents type  
+\begin{verbatim}
+DIR RALCCD_DOCUMENTATION
+\end{verbatim}
+Both text and postscript versions of the files are available. The file names for the user guide are
+{RALCCD$\_$DOCUMENTATION:ALPHA$\_$VMS.TXT} and 
+\newline
+{RALCCD$\_$DOCUMENTATION:ALPHA$\_$VMS.PS}. These can be printed on
+one of the printers at RAL or transferred to the users home and printed locally. 
+
+
+ 
+\subsection{Running on OSFSERV Unix farm}
+The TCP/IP address for OSFSERV is {\bf osfserv.rl.ac.uk}  
+(or 130.246.104.2).
+Jobs are run on the OSFSERV Unix farm using a script file. Note that the Unix
+operating system is case sensitive (unlike VMS on the DEC ALPHA). A script file for running
+med103 (med103.scr) is shown next
+\begin{verbatim}
+# med103.scr:
+# QSUB -mb -me
+# @$ -eo
+# @$ -q long
+# @$ -lt 360:00
+# @$
+#
+cd /home/osfserv/ad1/med103
+ln -f -s ~/med103/xal100fs.out  fort.11
+ln -f -s ~/med103/ial100fs.out  fort.12 
+ln -f -s ~/med103/fal100fs.out  fort.13
+ln -f -s ~/med103/ral100fs.out  fort.15
+f77 -o med103  -r8  -align dcommons med103.for  
+med103  < ~/med103/al100fs.dat > ~/med103/oal100fs.out  
+\end{verbatim}
+
+The first line is a comment line. The next line
+sends a mail at beginning and end of request execution. 
+This can then be checked using the command {\bf elm} for example.
+The next  line directs all error messages that are normally appended to the standard error file
+({\bf stderr}) to the standard output file ({\bf stdout}). The next lines queues the request in the {\bf long} queue. 
+Other currently available queues are {\bf short, medium} and {\bf large} queues. The next lines set a limit
+of 360 minutes and the following two lines are comments. 
+
+The line beginning with {\bf cd} changes directory to where the med103 files are kept.
+You should change
+this to point to the directory where you keep your files. 
+The next line links the file {\bf xal100fs.out} to fortran stream 11 and the linking to files 
+is repeated for stream 12, 13 and 15.
+Stream 11 ({\bf xal100fs.out}) contains the X-ray laser output in a
+form suitable for the graphic package {\bf xrlrec3} or {\bf xrlcol3}.
+Stream 12 ({\bf ial100fs.out})
+contains the ionization data in a form suitable for the {\bf ion3} package.
+Stream 13 ({\bf fal100fs.out}) contains the hydrodynamic
+variables in a form suitable for the graphics package {\bf flip3}.
+Streams 15 is used for the restart feature.
+The code dumps all variables specifying the target on stream 15 ({\bf ral100fs.out}) (every time
+it produces an output on stream 6).
+When restarting a previous run the code reads the necessary variables from stream 15.
+
+Under Unix if a file already exists and a new file is created with the same name, the new file
+will override the old one. The old data is therefore lost. 
+This is unlike VMS where the new file is given a different version number from the old, thus keeping the old data.
+
+The line beginning with {\bf f77} compiles and links the file {\bf med103.for} in double precision
+and creates the executable file {\bf med103}. 
+If you do not want to recompile the code every time you run it,
+you can keep the executable file med103 by putting a comment ({\#})
+in front of {\bf f77}.
+The final line runs {\bf med103} and reads the standard fortran input 
+(stream 5) from {\bf al100fs.dat} and writes the standard output (stream 6) in file {\bf oal100fs.out}. 
+
+Batch jobs are submited to the  Network Queuing System (NQS) using the standard 
+command {\bf qsub}.
+To run the above script file as a batch job just type
+\begin{verbatim}
+qsub med103.scr
+\end{verbatim}
+Almost immediately you will be sent a message.
+\begin{verbatim}
+Request 18821.osf01.cc.rl.ac.uk submitted to queue: long.
+\end{verbatim}
+18821.osf01 is the request-id. 
+
+You can find out about the status of your batch job by typing
+\begin{verbatim}
+qjob
+\end{verbatim}
+This also tell tells you on which host your request is running (osf01, osf02, osf03, osf04 or osf05).
+If for some reason you decide to cancel your request and assuming your request is queued on osf03.cc.rl.ac.uk
+type
+\begin{verbatim}
+qdel -h osf03 18821.osf01
+\end{verbatim}
+If the job is already executing you should also specify -k
+\begin{verbatim}
+qdel -k -h osf03 18821.osf01
+\end{verbatim}
+The queue long has a maximum time limit of 24 hours.
+To allow for batch jobs requiring different resources,
+a number of different queues are available.
+You can  find out the names, limits etc ...  of the other queues by
+typing
+\begin{verbatim}
+more /usr/local/doc/osfserv/nqs_limits.txt
+\end{verbatim}
+this will list all the queues and also give
+you the maximum amount of CPU time allowed on any one queue.
+When the job has finished you will be sent a mail which you can view using {\bf elm} for example. 
+The file {\bf med103.scr.o18821} which contains any error messages is also created.
+More help on the different commands can be obtained interactively using the command {\bf man}. for example
+\begin{verbatim}
+man qsub
+\end{verbatim}
+There are also a number of online documents including a user's guide for OSFSERV. To find out the list of
+available documents type
+\begin{verbatim}
+ls /usr/local/doc/osfserv
+\end{verbatim}
+Bot text and/or postscript versions of the files are available. The file names for the user guide are
+{\bf /usr/local/doc/osfserv/osf1gd.txt} and {\bf /usr/local/doc/osfserv/osf1gd.ps}. These can be printed on
+one of the printers at RAL or transferred to the users home and printed locally.
+               
+
+\subsection{Running on COLUMBUS}
+The TCP/IP address for COLUMBUS is {\bf columbus.rl.ac.uk}
+(or 130.246.12.27).
+A script file for running
+med103 on columbus (med103.scr) is shown next
+\begin{verbatim}
+# med103.scr:
+# @$
+cd /home/columbus5/ad1/med103
+ln -f -s /home/columbus5/ad1/med103/xal100fs.out  fort.11
+ln -f -s /home/columbus5/ad1/med103/ial100fs.out  fort.12
+ln -f -s /home/columbus5/ad1/med103/fal100fs.out  fort.13
+ln -f -s /home/columbus5/ad1/med103/ral100fs.out  fort.15
+f77 -o med103  -r8  -fast -align dcommons med103.for
+med103  < /home/columbus5/ad1/med103/al100fs.dat > oal100fs.out
+\end{verbatim}
+
+This is similar to the script file used in osfserv (see section 2.3 for an explanation).
+Batch jobs are submited to the  Network Queuing System (NQS) using the standard
+command {\bf qsub}.
+To run the above script file as a batch job just type
+\begin{verbatim}
+qsub -q e2 med103.scr
+\end{verbatim}
+Notice the queue name (e2) is now given in the command line instead of the
+script file. 
+
+Almost immediately you will be sent a message.
+\begin{verbatim}
+Request 16104 is submitted to queue e2.
+\end{verbatim}
+16104 is the request-id.
+
+You can find out about the status of your batch job by typing
+\begin{verbatim}
+qstat
+\end{verbatim}
+If for some reason you decide to cancel your request 
+type
+\begin{verbatim}
+qdel 16104
+\end{verbatim}
+If the job is already executing you should also specify -k
+\begin{verbatim}
+qdel -k 16104
+\end{verbatim}
+The queue {\bf e2} has a maximum time limit of 6 hours.
+To allow for batch jobs requiring different resources,
+a number of different queues are available.
+You can  find out the names, limits etc ...  of the other queues by
+typing
+\begin{verbatim}
+more /usr/local/doc/columbus/batch_queues.txt
+\end{verbatim}
+this will list all the queues and also give
+you the maximum amount of CPU time allowed on any one queue.
+When the job finishes, any error messages are written to 
+the file med103.scr.e.
+More help on the different commands can be obtained interactively using the {\bf man} command. for example
+\begin{verbatim}
+man qsub
+\end{verbatim}
+There are also a number of online documents. To find out the list of
+available documents type
+\begin{verbatim}
+ls /usr/local/doc/columbus
+\end{verbatim}
+                                                                                          
+\newpage
+\section{Changing the Input Data File}
+This is the most important part of the process by which you may edit
+the input data file in order to create the conditions you desire.
+MED103 reads in data using NAMELIST.
+The NAMELIST is a non-standard FORTRAN extension that works on COLUMBUS, 
+OSFSERV, the DEC ALPHA and other machines (although the control
+character may change from a dollar to something else). 
+A typical data file may look like this (GE1C.DAT)
+
+\begin{verbatim}
+GE TARGET (NE-LIKE SCHEME) MODELLED IN planar GEOMETRY                          
+100 mic wide (99.5 micron ,0.5 micron Ge)  anabs=0.20                           
+I=2.0e13W/cm2  gaussian  ,1.06 micron,Ideal Gas                                 
+************************************************************************        
+ $NEWRUN                                                                        
+ XAMDA1=1.06E-6, GAUSS=1.0, PMAX=2.0E17, ANPULS=1.0,                            
+ PLENTH=0.36E-09,  pmult=1.389, toff=1.0e-06,                                   
+  MESH=40,   RINI=99.5E-6,    RHOGAS=5323., RF1=0.4232,                         
+  XZ=32.0,    XMASS=72.61,   FNE=1.0,                                           
+    ZGLAS=10., DRGLAS=0.250E-06, ROGLAS=5323.,  RF2=0.9999,                     
+    XZ2=32.,   XMASS2=72.61,   FNE2=1.0,                                        
+      ZPLAS=20., DRPLAS=0.250E-06, ROPLAS=5323.,  RF3=0.9181,                   
+      XZ1=32.,   XMASS1=72.61,   HYDROG=0.0,                                    
+ NGEOM=1, PIQ(55)=0.0, TEINI=300.,TIINI=300.,                                   
+ NLRES=f,  NPRNT=-100,TSTOP=1.00e-09,  NRUN=999999, 
+ NP3=1,     NLEMP=F,                                                            
+ NLBRMS=T,  FLIMIT=10.0,                                                        
+ NLCRI1=T,  ANABS=0.20,   FHOT=0.0,       FTHOT=-1.0,    RHOT=1.0,              
+ NLPFE=f,    state=0.0, saha=2.0,                                
+   ICXRL=1,  ISTAGE=4,                                                          
+   IFRSTA=1, ILOSTA=09,   IHISTA=11,                                            
+   IDFLG=0,  ROPMUL=1.0,    ITBFLG=0,    ISTFLG=0,                              
+   idrflg=1, drmul=1.0, IPUFLG=0,                                               
+     NLMAX=2,  FL(1)=0.10e00,fl(2)=0.30,                                          
+   ak1=1., ak2=1., ak3=1., ak4=1., ak8=1., ak9=1.,
+ $END                                                                           
+\end{verbatim}
+There is a space in the first column of
+this file before the \$, this is necessary so don't remove it.
+The four lines written before the \$ have no effect and are thus like a
+comment space. These lines do, however, get printed out by the code so
+they may be used to identify any particular run
+(assuming you change them). These lines are {\bf necessary} as the code
+expects four lines of something before it starts to read the NAMELIST
+file. The first of these four lines is also included in the titles
+given to the graphics output packages so if each run is sensibly
+labelled it should be easier to reconcile all the MED103 output
+you will inevitably generate.
+Going through this NAMELIST file will provide
+a user with just about all they need to know about controlling
+MED103. The order in which the data appears in the NAMELIST
+is not significant.
+Also if a constant is not declared in the NAMELIST then it should
+default to some reasonably sensible value. This is why most input
+data files do not have all the control
+variables shown in the following list.
+\newline 
+{\bf Note: } When editing this file make sure all lines (except the last)
+have a comma at the end.
+\newline 
+Below the letters
+C,I,R and L refer to character, integer, real and logical constants
+respectively. D denotes the default value. The default value
+may stop the code from falling over but it will not necessarily give
+sensible results for your problem.
+
+\subsection{Explanation of the input parameters}
+\subsubsection{\bf Geometry}
+\begin{itemize}
+\item {\bf NGEOM (I) D=3}
+This variable sets the
+geometry of the problem; 1 is planar, 2 is cylindrical and 3 is
+spherical. Note: the X-ray laser calculations will at present
+only work in cylindrical and planar geometries.
+\end{itemize}
+\subsubsection{\bf  Laser}
+\begin{itemize}
+\item {\bf XAMDA1 (R) D=10.0E-6}
+laser wavelength (m).
+\item {\bf GAUSS (R) D=0.0}
+This sets the laser pulse shape. 
+\newline GAUSS=1.0
+gives a gaussian pulse shape. A single Gaussian pulse is given  
+by 
+$$P(t)=PMAX\times exp(-((t-PMULT*PLENTH)/PLENTH)^2)$$
+\newline GAUSS=--1.0 gives a triangular pulse given by 
+$$P(t)=PMAX\times t/PLENTH (for 0 \leq t \leq PLENTH)$$
+and 
+$$P(t)=PMAX\times (TOFF-t)/(TOFF-PLENTH) (for PLENTH \leq t \leq TOFF)$$  
+\newline GAUSS=--2.0 gives a triangular pulse with a flat top (For a pecification see Fig. 1 Appendix C). 
+\newline GAUSS=0.0 gives an isentropic pulse.
+For a specification of the
+isentropic pulse see \cite{cpc} or look in subroutine laser.
+\item {\bf TON (R) D=0.0}
+This defines the turn-on time of the laser (in s).
+This is normally set to 0.0. 
+\item {\bf TOFF (R) D=0.0}
+This defines the turn-off time of the laser (in s).
+This is normally set to a large value such as 1.0. This does not
+mean that you will run for a simulation time of 1 second as other
+control factors will stop the run well before this.
+\item {\bf PMAX (R) D=0.0}
+This is the peak power of the laser in units
+of W m$^{-2}$ for planar targets, W m$^{-1}$ rad$^{-1}$ for cylindrical
+targets and W ster$^{-1}$ for spherical targets. Note: The summary print-out
+also includes a factor called PEQUIV which shows the equivalent
+surface irradiance in W cm$^{-2}$ for any of the three geometries.
+In this way one can check that, for example, a planar experiment
+modelled in cylindrical geometry has the right surface irradiance.
+\item {\bf PLENTH (R) D=0.0} In the case of one Gaussian pulse,
+this is the time from the peak of the laser
+pulse to the value at which the laser is only $e^{-1}$ of its maximum
+value (in s). This may be approximated to PLENTH=0.6$\times$FWHM.
+\item {\bf PMULT (R) D=0.0} In the case of one Gaussian pulse,
+this is the number of PLENTH times at which
+the run starts before the peak of the pulse. The larger the number the
+slower the turn-on of the laser,
+this helps avoid shocks at the beginning.
+However, the larger the number, the
+longer the code will have to run and the more CPU time it will use.
+\item {\bf ANPULS (R) D=0.0} When using Gaussian pulses (GAUSS=1.), this sets 
+the number of Gaussian pulses. Set this to 1.0, 2.0, 3.0, 4.0 or 5.0. 
+Each of the additional 4 pulses is determined by specifying the peak power,
+width and time of peak, in a way similar to specifying (PMAX, PLENTH and PMULT) for the first
+pulse. The variable which are used for this purpose are shown in Table 1, Appendix C,  and an example input data 
+file which uses two pulses can be seen in 
+AL100FS.DAT in this manual.
+\newline
+ANPULS is also used to specify 2 pulses when  GAUSS=-2., 
+The variables needed to specify the second pulse in thi case, are given in italic in Fig 1 of Appendix C.
+\end{itemize}
+\vspace*{5mm}
+
+
+\subsubsection{\bf Numerical and Target Design}
+\newline
+MED103 was previously designed to model three layer ICF targets
+comprising the inner gas
+fill, the middle glass shell and an outer plastic shell. The code was
+modified to allow the user to control the contents of the inner gas fill
+(referenced as neon). In practise this meant that one could decide that
+the proportion of `neon' was, say, 100\% and that the `neon' should have
+an atomic charge number of, for example, 79.0 (i.\ e.\ gold). This meant
+that the inner fill was solid gold. The code has now been modified to
+allow the user to alter not only the inner gas fill but to overwrite the
+`glass' and `plastic' constituents of the second and third shell. In
+this way MED103 now allows the user complete control over a three layer
+target. Some of the names given to the desired quantities will seem odd.
+This is because the modifications to MED103 have been made with the
+intent of making the code upwardly
+compatible with older versions (i.\ e.\
+MED103 should run with an old data file with no modifications and
+produce the same results, except perhaps where a correction or
+modification to the physics has been made. Note however that the
+wavelength is now called XAMDA1, not LAMDA1).
+\begin{itemize}
+\item {\bf MESH (I) D=40}
+This controls the total number of cells used in ALL THREE
+layers. This number should not exceed {\bf 200}, but this can easily
+be changed in the code if necessary. The larger this number is,
+the more accurately the layer will be modelled but the longer the
+code will take to run. A typical value for MESH is 60.
+\item {\bf ZGLAS (R) D=0.0}
+This controls the number of cells in the second layer or
+`glass' layer. Note: this number is a real. If no second layer is
+desired then set ZGLAS=0.0
+\item {\bf ZPLAS (R) D=0.0}
+This controls the number of cells in the third layer or
+`plastic' layer. Note: this number is a real. If no third layer is
+desired then set ZPLAS=0.0
+\item {\bf RINI (R) D=4.8E-4}
+This sets the thickness of the inner layer or `gas' fill(m). Each cell
+will then be RINI/(MESH-ZGLAS-ZPLAS) thick, e.\ g.\ if RINI=10.0E-6
+and MESH=60, ZGLAS=20.0 and ZPLAS=20.0 then the cell thickness in
+the inner layer will be 0.5E-6 meters. The setting of this value
+becomes more complicated with the use of the arithmetic gridding factors
+(see later parameters and appendix A).
+\item {\bf DRGLAS (R) D=0.0}
+This sets the thickness of the second layer(m). The thickness of the
+individual zones is then DRGLAS/ZGLAS. If no second layer is desired
+then specify DRGLAS=0.0. (Note: if ZGLAS=0.0 then DRGLAS is set to 0.0)
+\item {\bf DRPLAS (R) D=0.0}
+This sets the thickness of the third layer(m). The thickness of the
+individual zones is then DRPLAS/ZPLAS. If no third layer is desired then
+specify DRPLAS=0.0. (Note: if ZPLAS=0.0 then DRPLAS is set to 0.0)
+\item {\bf RHOGAS (R) D=124.0}
+This is the density of the inner layer or `gas fill'. Units are
+kgm$^{-3}$.
+\item {\bf ROGLAS (R) D=0.0}
+This is the density of the middle layer or `glass shell'. Units are
+kgm$^{-3}$.
+\item {\bf ROPLAS (R) D=0.0}
+This is the density of the outer layer or `plastic shell'. Units are
+kgm$^{-3}$.
+\item {\bf XZ (R) D=1.0}
+This is the atomic number of the inner layer or `gas fill' material.
+\item {\bf XZ2 (R) D=14.0}
+This is the atomic number of the middle layer or `glass shell' material.
+\item {\bf XZ1 (R) D=6.0}
+This is the atomic number of the outer layer  or `plastic
+shell' material.
+\item {\bf XMASS (R) D=1.}
+This is the atomic mass number of the inner layer or `gas fill' material.
+\item {\bf XMASS2 (R) D=28.0855}
+This is the atomic mass number of the middle layer or `glass
+shell' material.
+\item {\bf XMASS1 (R) D=12.011}
+This is the atomic mass number of the outer layer
+or `plastic shell' material.
+\item {\bf FNE (R) D=0.0}
+This is the fraction of the material specified by XZ, XMASS and RHOGAS
+that is used in the inner layer. The remaining fraction is divided
+equally between deuterium and tritium. This is really only useful for
+modelling ICF targets, to fill the inner layer entirely with a specified
+material set FNE=1.0.
+\item{\bf FNE2 (R) D=0.0}
+This is the fraction of the material specified by XZ2, XMASS2 and ROGLAS
+that is used in the middle layer. The remaining fraction is set to be
+silicon. Again, this is left--over from modelling ICF targets. To get
+control specify FNE2=1.0.
+\item{\bf HYDROG (R) D=0.0}
+This controls the fraction of hydrogen in the plastic or outer shell. If
+HYDROG=0.0 then the outer layer is composed entirely of the material
+specified by XZ1, XMASS1 and ROPLAS. Anything greater than 0.0 will
+result in a plastic of some form. For example, to obtain CH$_2$ use
+HYDROG=0.67.
+ 
+As stated earlier MED103 has been altered to allow the user control
+over the constituent materials in all three layers. If a mixed layer is
+desired then the atomic numbers and mass numbers should be averaged.
+From the point of
+view of modelling the hydrodynamics, averaging the atomic and mass
+numbers is acceptable, providing the real
+density is used for the material.
+For example, to have a plastic layer as the inner
+target layer corresponding to CH then the charge number would be 3.5 and
+the mass number would be 6.5 with a density of 1000 kgm$^{-3}$.
+Note: this does not make sense for X-ray laser calculations
+(see below).
+\item {\bf RF1 (R) D=0.99999}
+This controls the arithmetic gridding in the `gas fill' or inner layer.
+\item {\bf RF2 (R) D=0.99999}
+This controls the arithmetic gridding in the `glass' or middle
+layer.
+\item {\bf RF3 (R) D=0.99999}
+This controls the arithmetic gridding in the `plastic' or outer layer.
+
+For a definition of RF1, RF2 and RF3 see appendix A.
+A simple fortran programme which calculates the RF value given the total thickness,
+the thickness of the first cell and the number of meshes is given in appendix B.
+ 
+When using planar geometries it is possible to specify whether the left
+and right boundaries of the mesh are fixed or free. This is controlled by
+the variable PIQ(55). Bear in mind that MED103 treats the laser as
+travelling from right to left (from a high cell number towards cell
+number 1). 
+\item {\bf PIQ(55) (R) D=0.0}
+PIQ(55) is set to 0.0 by default and if NGEOM$\not=$1 then the
+left boundary is fixed with PIQ(55) controlling the right boundary.
+A thin foil, for example, would be best modelled with PIQ(55)=2.0.
+The various combinations are:
+\begin{itemize}
+\begin{itemize}
+\item{0.0} Left boundary fixed. Right boundary free.
+\item{1.0} Left boundary fixed. Right boundary fixed.
+\item{2.0} Left boundary free. Right boundary free.
+\item{3.0} Left boundary free. Right boundary fixed.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+ 
+
+\subsubsection{\bf Physics}
+\begin{itemize}
+\item {\bf TEINI (R) D=1.0E3}
+This is the initial temperature of the electrons, normally set to
+a value of, typically, 300 K.
+It is now possible to specify a different initial electron temperatures for each layer if desired (see table 2 in Appendix C).
+\item {\bf TIINI (R) D=1.0E3}
+This is the initial temperature of the ions, normally set to
+the same value as TEINI, typically, 300K.
+It is now possible to specify a different initial ion temperatures in each layer if desired (see table 2 in Appendix C).
+\item {\bf ANABS (R) D=0.0}
+This is the amount of laser energy that having reached critical
+density (i.\ e.\ having been to some extent depleted by inverse
+bremsstrahlung absorption) is deposited in the plasma by
+resonance absorption. Typically 10\%-20\% (e.\ g.\ ANABS=0.2).
+Note: this only works if NLCRI1=.TRUE.
+\item {\bf FHOT (R) D=0.0}
+This is the fraction of laser energy absorbed by
+resonance absorption that gets converted to hot electrons, typically
+0.1. This is not the same as setting the amount of laser energy
+deposited by resonance absorption.
+\item {\bf FTHOT (R) D=0.0}
+This determines the way in which the code calculates the
+hot electron temperature $T_H$.
+\newline
+If FHOT$>$0.0 then $T_H=$FTHOT$\times T_{ec}$ where $T_{ec}$ is
+the electron temperature at critical density. 
+\newline
+If FHOT$<$0.0 then
+$T_H=-$FTHOT$\times f(I\lambda^2)$ where $f(I\lambda^2)$ is the
+LASL compilations of $T_H$ versus $I\lambda^2$. 
+\newline
+The transport of energy 
+of hot electrons is handled by splitting the Maxwellian distribution 
+into 10 groups and performing a dE/dx calculation for each group. see subroutine ABSORB for details.
+\item {\bf RHOT (R) D=0.0}
+This controls the transport of hot electron energy after the electrons
+have made a single pass through the target. If RHOT=1.0 the energy
+remaining at this time is deposited throughout the target uniformly.
+If RHOT=0.0 then the remaining energy is lost. Typical value of
+RHOT is 1.0.
+\item {\bf FLIMIT (R) D=0.0}
+This is the control of the flux limiter where
+$${\rm FLIMIT}= {{\rm classical\ free\ streaming\ limit}
+\over {\rm desired\ flux\ limit}}$$
+A typical value of FLIMIT is 10.0 (i.\ e.\ the desired flux limit is 0.1)
+\item {\bf PIQ(27) (R) D=0.0}
+It is possible to vary the thermal conductivity of the electrons, $K_e$,
+using
+$$K_e = K(Spitzer) \times (1.0 + {\rm PIQ(27)})$$
+As all elements of the PIQ array default to zero the conductivity will
+be the Spitzer value by default.
+\item {\bf NLOMT3(10) (L) D=F}
+This controls whether non local
+electron heat conduction
+is used instead of flux limited Spitzer formulation (above). For planar geometry
+the formulation by Luciani et al\cite{Luciani} is used. This is generalized to cylindrical and spherical geometry
+using an approximate (and less rigorous)  method.
+\item {\bf STATE (R) D=0.0}
+The ions always have a perfect gas equation of state
+regardless of the value of NLPFI (see next section).
+If NLPFE=T then the electrons also
+use the perfect gas equation of state. If NLPFE=F then the equation
+of state is decided by the value given to STATE. Typically, STATE=3.0
+is reasonable when using SAHA=1.0. If NLPFE=T, this will save CPU time but the physics may
+not be strictly applicable to your specific situation. The values of
+STATE are
+\begin{itemize}
+\begin{itemize}
+\item {0.0} Fermi Dirac
+\item {1.0} Thomas Fermi
+\item {2.0} Thomas Fermi with quantum corrections
+\item {3.0} Thomas Fermi with modified corrections to
+give correct solid density.
+\end{itemize}
+\end{itemize}
+\item {\bf SAHA (R) D=0.0}
+SAHA determines whether or not to calculate ionization equilibrium.
+\newline
+If SAHA=0.0, the material is assumed to be fully ionized.
+\newline
+If SAHA=1.0
+then the ionization is calculated from Saha's equation (Z $\le$ 18) or
+the Thomas-Fermi model for higher Z values.
+\newline
+If SAHA=2.0 then the ionization is calculated from the time-dependent
+solution of the average atom rate equations.
+\newline
+{\bf Note:} If the X-ray laser
+calculations are turned on, then the ionization balance must be calculated
+using SAHA=2.0.
+\item {\bf PONDF (R) D=0.0}
+This controls whether or not the ponderomotive force of the laser
+is included in the momentum equation. PONDF=1.0 includes the
+ponderomotive force. This uses a very crude prescription for the ponderomotive force and should be
+used with caution. The ponderomotive force is calculated in the WKB approximation only and the code
+calculations will be illustrative rather than quantitative (see subroutine FORMP).
+\end{itemize}
+\vspace*{5mm}
+
+\subsubsection{\bf Physics: Logical Switches}
+\newline
+This section details the logical switches that control whether
+certain pieces of physics are to be included in the calculation.
+If {\bf switch}=.TRUE. (or T) the part is included,
+if {\bf switch}=.FALSE. (or F) it is not.
+\begin{itemize}
+\item {\bf NLTNL (L) D=F}
+This controls whether
+tunnel ionization 
+is included in the average atom rates.
+\item {\bf NLABS (L) D=T}
+This controls whether
+the absorption of laser radiation by inverse bremsstrahlung
+is included in the calculation.
+\item {\bf NLHF (L) D=F}
+This controls whether a high field correction is applied
+to the absorption of laser radiation by inverse bremsstrahlung.
+\item {\bf NLBRMS (L) D=T}
+This controls whether
+radiation from bremsstrahlung in the plasma
+is included in the calculation.
+\item {\bf NLBURN (L) D=T}
+This controls whether
+burning of fusion fuel
+is included in the calculation.
+\item {\bf NLCRI1 (L) D=T}
+This controls whether
+any laser energy is dumped at critical density
+in the calculation.
+\item {\bf NLDEPO (L) D=T}
+This controls whether
+any energy from fusion products
+is included in the calculation.
+\item {\bf NLECON (L) D=T}
+This controls whether
+electron heat conduction
+is included in the calculation.
+\item {\bf NLICON (L) D=T}
+This controls whether
+ion heat conduction
+is included in the calculation.
+\item {\bf NLFUSE (L) D=T}
+This controls whether
+fusion from D-D, D-T and D-He3 (if present)
+is included in the calculation.
+\item {\bf NLMOVE (L) D=T}
+This controls whether
+fluid motion
+is included in the calculation.
+\item {\bf NLPFE (L) D=T}
+This controls whether
+the equation of state for electrons is the perfect gas EOS.
+\item {\bf NLPFI (L) D=T}
+This controls whether
+the equation of state for ions is the perfect gas EOS.
+\item {\bf NLX (L) D=T}
+This controls whether
+ion-electron collisional relaxation
+is included in the calculation.
+\end{itemize}
+\vspace*{5mm}
+
+
+
+\subsubsection{\bf Run Control}
+\begin{itemize}
+\item {\bf NLRES (L) D=F} This switch specifies if the code should restart a previous run.
+If this switch is set to true (T), the code will read the previous simulation dump from fortran stream 15
+and carry on from there.
+\item {\bf TSTOP (R) D=1.0E-6}
+This is the time in the simulation at which the calculation stops
+(units are seconds).
+\item {\bf NRUN (I) D=100}
+This is the maximum number of time steps that the code is allowed to run
+for. Set this to something large (e.\ g.\ 80000) so that the code will
+always terminate because of TSTOP rather than NRUN --- this makes it
+easier to terminate the run exactly when you want.
+\item {\bf NPRNT (R) D=100.0}
+This is the number of time steps between printer (and restart and graphics
+files) dumps. If NPRNT
+is negative then this number becomes the number of picoseconds between
+successive printer (and restart and graphics files) output. For example, to produce
+a printout every 100 femtoseconds use NPRTNT=-0.1.
+\item {\bf NLEMP (L) D=T}
+This controls whether you receive reams of diagnostic print-out when the
+code falls over. Probably best set to .FALSE.
+\item {\bf NP3 (I) D=(MESH/20)}
+This how often the range of cells is sampled in order to provide output
+for the printer and graphics dumps, i.\ e.\ it is part of a construct
+\begin{verbatim}
+      DO 10 I=1,MESH,NP3
+        WRITE ...
+   10 CONTINUE
+\end{verbatim}
+Set NP3=1.
+\end{itemize}
+\vspace*{5mm}
+
+\subsubsection{\bf Code Control}
+\newline
+This section lists some of the parameters available to the user for
+altering some of the numerical parameters in the code. Generally,
+these values should not be altered unless a specific problem
+is encountered, it is best to seek advice.
+\begin{itemize}
+\item {\bf DELTAT (R) D=1.0E-18}
+This is the initial timestep, the code will automatically choose
+its own value for this after a few time steps. Something small, typically
+$10^{-18}$s (the default) is recommended.
+\item {\bf DTMAX (R) D=1.E-09}
+This is the maximum time step that the code is allowed to use.
+\item {\bf AK0 (R) D=5.0}
+The is the maximum allowable ratio of successive time steps. Set AK0
+to something large (e.\ g.\ 100.0) if message `time centering is damaged'
+appears.
+\item {\bf AK1, AK2, AK3, AK4, AK5 (R) D=0.25,0.25,0.25,0.25,0.0}
+These numbers control the choice of timestep by the code. Refer to routine
+TIMSTP. AK1 controls the CFL condition:$\Delta t<\Delta r/c_s$.
+AK2--4 control the range of density,
+ion temperature and electron temperature
+respectively, AK5 is not used at present.
+
+\item {\bf AK8, AK9,  (R) D=0.25,0.25}
+These numbers also control the choice of timestep by the code when usind the average atom model (SAHA=2.). 
+Refer to routine
+TIMSTP. AK9 was introduced to control the change in average ionization state
+(useful when tunnel ionization is switched on). AK8 was introduced to control the change in 
+energy input in a given computational cell 
+(useful when simulating high peak power short pulses).  
+Note: AK6 and AK7 are not used at present.
+
+\item {\bf NLITE (L) D=T}
+This is a logical switch that controls iterations on $T_i$, $T_e$ and $U$
+(the internal energy). Since the thermal conductivity is non-linear
+it is best to iterate. Calculations which have electron thermal conduction
+switched off could set NLITE=F.
+\item {\bf DUMAX, DTEMAX, DTIMAX (R) D=0.1,0.1,0.1}
+The maximum fractional change in $U$, $T_e$ and $T_i$ which represent
+acceptable convergence.
+\item {\bf NITMAX (I) D=5}
+The maximum number of iterations before code stops due to the iterations
+failing to converge.
+\end{itemize}
+
+
+\subsubsection{\bf X-Ray Laser Calculations}
+\newline
+One of the major new additions in MED103 and MED101 are subroutines for calculating
+X-ray laser gain in collisional \cite{djaoui2} as well as recombining plasmas \cite{sjr}.
+The recombining option  is suitable for the three main single active
+electron atom/ion lasing schemes (i.\ e.\ H-like, Li-like and Na-like) and the collisional
+option is only implemented for the Ne-like scheme.
+An option for
+modelling photopumping is included.
+The x-ray laser subroutines are an integral part of MED103 but are switched
+off by default so that users only interested in modelling
+hydrodynamics may do so by setting (ICXRL=0).
+
+ 
+When X-ray laser gain is calculated the non-LTE time dependent average atom model should be used to
+calculate the fractions of different ion stages within the plasma by setting SAHA=2.
+The X-ray laser data output includes
+gain as a function of radius for every time frame dumped, refraction
+of the X-ray beam (based upon the width and length of the X-ray laser
+target which is supplied by the user)
+and a spatially integrated measure of
+gain that may be compared directly with the experimental results of X-ray
+laser experiments \cite{sjr}.
+All of this data is printed out on the standard MED103
+printout but is also written to data files for interpretation by the
+graphics packages. The X-ray laser code will
+run in cylindrical and planar
+geometries.
+ 
+There is also an option to add a scaling factor to
+the opacity of the resonance lines
+when using the average atom model. This is by default set to zero (i.\ e.\
+no absorption of the resonance line is included),
+if the scaling factor
+flag is set equal to 1 then a variable scaling factor may be used
+(this has been included to investigate the best agreement with
+recombination experimental results).
+ 
+As a sub-set of the X-ray laser calculations the spatially
+dependent ion densities
+of selected ionic species may also be output. Only the ground state
+number densities are calculated (typically 90--99\% of the ions are
+in their ground state).
+An option is supplied to calculate
+exactly what percentage of all of the ion states is in the
+ground state.
+ 
+All of these options are
+controlled by various switches and variables now included in the NAMELIST
+file. For the Integer type switch set the variable equal to 1 for
+the particular calculation to be carried out.
+ 
+{\bf Note:} in X-ray laser calculations pure
+atomic numbers and atomic mass numbers (XZ and XMASS  etc.)\
+must be used. However the real densities of the target materials
+should be used. For example, to model the carbon in a plastic target
+in an X-ray laser calculation use
+a density of 1000 kgm$^{-3}$ (if it uses a plastic target) rather than
+using the higher density appropriate for pure carbon, but
+with a charge number of 6 and a mass number 12.
+\begin{itemize}
+\item {\bf ICXRL (I) D=0}
+This is a switch that controls whether the
+X-ray laser calculations are to be included.
+\item {\bf ISTAGE (I) D=1}
+This controls the scheme used in the calculation:
+\newline
+1 H-like
+\newline
+2 Li-like
+\newline
+3 Na-like
+\newline
+4 Ne-like
+\item {\bf DLAMDA (R) D=81.0E-8}
+If ISTAGE $\le$ 3, DLAMDA is the wavelength of the main X-ray lasing transition (units are cm).
+\item {\bf IFRSTA (I) D=0}
+This is a switch that controls whether the
+spatially dependent ion densities
+are included in the calculation. 
+This can only  be carried out at present
+when SAHA=2.
+\item {\bf IDFLG (I) D=0}
+This is a switch that controls whether trapping of the resonance line
+is included in the calculation of the average atom level populations.
+\item {\bf ROPMUL (R) D=0.0}
+This is the scaling factor that alters the escape
+factor of the resonance line
+in the calculation. Set equal to 0.0 if no trapping is desired (or
+set IDFLG=0), set =1.0 if full trapping is to be included. Any other
+value chosen for this variable is up to you.
+\item {\bf ITBFLG (I) D=1}
+\itemitem{0} No thermal band.
+\itemitem{1} Forces the population of the highest level to be in LTE.
+\item {\bf ISTFLG (I) D=0}
+This controls whether motional Stark broadening is to be included in
+the calculation (NB: Only data for carbon is at present included).
+\itemitem{0} Motional Stark broadening is not included.
+\itemitem{1} Motional Stark broadening is included on the Balmer alpha
+line.
+\item {\bf IPUFLG (I) D=0}
+This controls whether photopumping is to be included in the calculation.
+\item {\bf TPON (R) D=0.0}
+This is the time at which the photopumping is switched on
+(units are seconds).
+\item {\bf TPOFF (R) D=0.0}
+This is the time at which the photopumping is switched off
+(units are in seconds).
+\item {\bf NLP (I) D=0}
+This is the lower level (corresponding to the principal quantum number
+of the state in question) with which a coincidence photopumping line
+is to be included.
+\item {\bf NUP (I) D=0}
+This is the upper level (corresponding to the principal quantum number
+of the state in question) with which a coincidence photopumping line
+is to be included.
+\item {\bf RMPD (R) D=0.0}
+This is the modal photon density of the pumping radiation.
+\item {\bf FLSHORT (R) D=0.1}
+This is the short length of the X-ray laser gain medium
+(i.\ e.\ the width
+of the gain region), units are in cm. (This is the same as FL(1))
+\item {\bf FLLONG (R) D=1.0}
+This is the long length of the X-ray laser gain medium, units are in cm. (This is the same as FL(2))
+ 
+The sub-set of the X-ray laser calculations that allows the spatially
+dependent ion densities of selected ion species in ground state
+to be calculated
+are controlled by ILOSTA and IHISTA.
+These specify the range of ionization
+stages that the calculation will use.
+\item {\bf ILOSTA (I) D=1}
+This is the number of electrons in the most
+ionized ion to be considered
+(the ion with the least bound electrons). For
+example, if ILOSTA=0 then the code will supply data on completely
+stripped ion densities, if ILOSTA=1, H-like ions, and so on.
+\item {\bf IHISTA (I) D=2}
+This is the number of electrons in the least
+ionized ion to be considered
+(the ion with the most bound electrons). For example,
+if ILOSTA=1 and IHISTA=3 then the code will supply the spatially
+dependent ion densities of H-like, He-like and Li-like ions.
+\item {\bf IGSTAT (I) D=0}
+This is a switch that controls whether the total number of ions
+in all ionization stages in the ground state, is calculated. This
+can be used to check whether the data supplied by the routines
+controlled by ILOSTA and IHISTA is reasonably valid. A high percentage
+of ions in the ground state means that this data is good.
+Note: Because this call calculates all of the possible ground state
+ions, it tends to eat up CPU time, so allow extra time if you
+include this.
+\end{itemize}
+\vspace*{5mm}
+
+\newpage 
+\section{General Hints}
+The following section outlines briefly the steps that a user should
+go through in order to set up data for a run.
+\begin{itemize}
+\item Specify laser wavelength, power (check units and geometry),
+pulse shape
+and duration. For Gaussian pulses set ANPULS to the number used ($\le$5)
+\item Specify the target material/s. Build the target from the inner
+layer outwards, i.\ e.\ if only one layer is desired then use the inner
+or `gas' fill layer. Check MESH is greater than (ZPLAS+ZGLAS).
+Check values of arithmetic gridding factor, if used. Check adjacent
+layers do not have a difference of more than a factor of 2 in mass
+(this applies when different target
+materials are used in different layers).
+For example, if layer 1 has a material with a density of $x$ kgm$^{-3}$
+then if layer 2 has a material with density $2x$ kgm$^{-3}$ then the cell
+size of layer 2 should be half that of layer 1.
+ 
+In specifying the physics the following applies to most
+normal situations:
+\item Always set RHOT=1.0 and FTHOT=--1.0
+\item If you know the absorption in a particular experiment that you are
+simulating, set NLABS=F and ANABS=$actual\ absorption$. If you have no
+information on the amount of hot electrons generated, set FHOT=0.5.
+\item The most useful way to get output over your run is to set
+it to print out data between 10-20 times over the duration of the run.
+This is most accurately controlled by using NPRNT with a negative value
+so that it prints at specific times
+rather than using a positive value that
+prints out after a specific number of timesteps (the difference between
+print-outs then varies), i.\ e.\ NPRNT=INT[(TSTOP*10$^{12}$)/10.0.]
+\item Give TIINI and TEINI identical values.
+\item When modelling recombination X-ray lasers, generally speaking, use cylindrical
+geometry. If the aim is to model a planar experiment then the code may be
+used provided the radius of the target is made large enough to model
+the plasma expansion as approximately planar. A general rule of thumb
+is to have the radius the same size as the width of the planar target to
+be modelled. This may, however, produce a plasma that cools too quickly
+and incorrectly model the resulting gain. If a larger radius is used the
+expansion will be more similar to a planar expansion. If in doubt,
+set at least one run to use real planar expansion and use this as the
+lower limit of the observed gain.
+\end{itemize}
+ 
+\subsection{Common Error Messages}
+There are two fairly common error messages:
+\begin{itemize}
+\item TIME CENTERING DAMAGED means that the ratio of successive time
+steps is less than AK0$^{-1}$. The remedy for this is to make AK0 larger,
+for example, set AK0=100.0. There is no penalty in run time and only a
+small likelihood of a serious numerical error.
+\item ITERATIONS FAIL TO CONVERGE VARIABLE $n$ IN CELL $l$. This is
+self-explanatory, the variable $n$ corresponds to the quantities:
+1=velocity, 2=density (specific volume), 3=$T_i$ and 4=$T_e$. The
+approach should be to reduce the value of AK$n$ (e.\ g.\ AK4 if $T_e$
+fails to converge) to a smaller value. There will be an increase in
+run time as the values of AK$n$ are reduced but the exact amount
+is unpredictable.
+\item POPULATIONS FAILED TO CONVERGE IN CELL $n$. This will only
+be seen in the time dependent ionization part of the code. This normally
+happens only at low temperatures whenever 
+a cell starts to heat up at the very beginning of a code run. At the start of
+the run the system will try to ionize very rapidly; if the timestep
+is too large (the timestep is determined by the
+hydrodynamics) then the
+calculation determining the ionization will fail to converge. If this
+only occurs at the start of the code (within 100ps)
+then ignore it --- the system will
+settle down after a short time. If the message occurs late in the
+run then there may be something wrong with the way the run has been
+set up.
+\item There are messages DENSITIES/TEMPERATURES TOO LOW. These
+will only normally be seen if the code has been allowed to run for
+extremely long times (e.\ g.\ greater than $10^{-6}$).
+\end{itemize}
+
+\newpage
+\section{Dealing with the output}
+When the job has finished on AXPRL2, OSFSERV or COLUMBUS
+(or has failed due to lack of time or space,
+or because of an error) all the output files will be sent to
+the files specified in the COMMAND or SCRIPT file.
+You can either view them on screen using and editor (EDIT on AXPRL2 and
+emacs on OSFSERV and COLUMBUS for example) or
+print them. you can use the  LPEM command to run a
+preprocessor on the output files.
+The output can be formatted in portrait or landscape
+mode with either one, two or four pages to a sheet of paper. The number
+of lines  per page and characters per line can also be altered.
+
+The following pages which show some typical MED103 output on stream 6, obtained
+using the input data file below (AL100FS.DAT) where formatted using
+\begin{verbatim}
+lpem -u2 -ol -f oal100fs.out oal100fs.pem
+\end{verbatim}
+before being printing using
+\begin{verbatim}
+lpr oal100fs.pem
+\end{verbatim}
+                                             
+\newline
+{\bf Table 1.1}: title page, input data as read from stream 5
+and a summary of the data.
+The remainder of the output comprises frames for the initial
+and later times (determined by the value of NPRNT) similar to tables 1.2 to 1.6
+\newline
+{\bf Table 1.2}: Hydrodynamic conditions of target at specified times.
+All quantities are calculated at the cell centre except the
+velocity which is calculated at the cell edge.
+For mixtures Z is the average atomic number.
+\newline
+{\bf Table 1.3}: Laser-related variables across target at specified time.
+(Intensity, absorption coefficient etc...)
+\newline
+{\bf Table 1.4 and 1.5}: non-LTE populations from the average atom model
+and corresponding LTE populations
+for the same density and temperature.
+This is only printed if SAHA=2.
+\newline
+{\bf Table 1.6}: Ground state ion fractions and densities for some ion stages
+specified by ILOSTA and IHISTA. This is only printed if SAHA=2 and IFRSTA=1.
+
+                                      
+\newpage
+\vspace*{9.15in}
+Table 1.1: title page, input data as read from stream 5
+and a summary of the data.
+%set{counter}{}
+\newpage
+\vspace*{9.15in}
+Table 1.2: Hydrodynamic conditions of target at specified time.
+\newpage
+\vspace*{9.15in}
+Table 1.3: Laser-related variables across target at specified time.
+\newpage
+\vspace*{9.15in}
+Table 1.4: non-LTE populations from the average atom model
+in each cell.
+\newpage
+\vspace*{9.15in}
+Table 1.5: LTE populations from the average atom model
+in each cell.
+\newpage
+\vspace*{9.15in}
+Table 1.6: Ground state ion fractions and densities for different ion stages
+ 
+\subsection{Using the Graphics Packages}
+The packages FLIP3, ION3, XRLREC3 and XRLCOL3  are all available
+for interpretation of the files output by MED103 on streams 11, 12 and 13.
+\newline
+1) FLIP3 --- this plots the hydrodynamic variables (velocity,
+density, pressure, electron and ion temperatures,
+and average ionization) vs.\ distance
+for different times, and also the hydrodynamic variables
+(cell edge and centre plus velocity  etc.)\ vs.\ time
+for each cell
+\newline
+2) ION3 --- this plots the ground state number density
+of the different ionization stages vs.\ distance at
+different times during the interaction.
+ION3 also displays the zoning of the run. This can be useful to
+ensure that there are enough cells in the regions of interest.
+\newline
+3) XRLREC3 --- this plots the recombination X-ray laser gain vs.\
+distance at different
+times, and also the space-integrated gain for different
+lines (i.\ e.\ alpha, beta etc.)\ vs.\ time as would
+as measured by experiment.
+\newline
+4) XRLCOL3 --- this plots the Ne-like collisional X-ray laser gain vs.\
+distance at different
+times, and also the space-integrated gain for different
+lines (i.\ e.\ alpha, beta etc.)\ vs.\ time as would
+as measured by experiment.
+
+The use of the above packages on AXPRL2 is described next.  
+The fortran files for these programmes can be obtained from DISK$\_$USER3:[AD1.PUBLIC]
+on machine AXPRL2.RL.AC.UK. These packages can also be run on OSFSERV and COLUMBUS using appropriate
+script files.
+
+ 
+All the graphs produced include six lines of data, (including
+a run name) compiled from the input data file recording, detailing
+most of the parameters used in that MED103 run.
+ 
+\subsubsection{FLIP3}
+FLIP3 reads data from stream 13 and writes to stream 16.
+For example, in order to display the hydrodynamic data from the example data file (AL100FS.DAT)
+you need a command file such the following.
+\begin{verbatim}
+!flip3.com
+$set default disk_user3:[ad1.med103]
+$fortran flip3.for
+$link/executable=flip3 flip3,nag$libj06/lib,nagg$gks/lib,nag$library/lib,gks_opt/opt
+$assign   week_disk:[public.week.ad1]fal100fs.out for013
+$assign   week_disk:[public.week.ad1]fal100fs.ps  for016
+\end{verbatim}
+first execute the file using
+\begin{verbatim}
+@FLIP3
+\end{verbatim}
+then run the executable using
+\begin{verbatim}
+RUN FLIP3
+\end{verbatim}
+First you will be asked
+\begin{verbatim}
+DO YOU WANT TO READ DATA FOR ALL           65 POINTS? Y/N ?
+\end{verbatim}
+Most times you should enter Y unless you want to read/plot data
+for a few cells only. Then you will be asked
+\begin{verbatim}
+ DO YOU WANT TO
+  S  Plot quantities vs SPACE
+  T  Plot quantities vs TIME
+  X  EXIT
+\end{verbatim}
+Enter S to plot quantities vs.\ space and T to plot quantities
+vs.\ time. When plotting vs.\ space you will be asked
+\begin{verbatim}
+WHAT DO YOU WANT TO PLOT
+   1. HYDRODYNAMIC VELOCITIES
+   2. DENSITY
+   3. PRESSURE
+   4. ELECTRON TEMPERATURE
+   5. ION TEMPERATURE
+   6. AVERAGE IONIZATION
+   7. ELECTRON DENSITY
+   0. RETURN TO SPACE-TIME-EXIT OPTION
+
+      Enter choice (0 - 7)
+ ?
+\end{verbatim}
+if you enter 1, 2, 3, 4, 5, 6 or 7  you will be asked
+\begin{verbatim}
+ DO YOU WANT TO PLOT ALL TIME FRAMES? Y/N
+\end{verbatim}
+If you answer Y you will be asked
+\begin{verbatim}
+ DO YOU WANT LOGS ON THE Y-AXIS WHERE POSSIBLE? Y/N
+ 
+ DO YOU WANT THE OVERALL MAXIMA FOR EVERY TIME FRAME? Y/N
+\end{verbatim}
+Plotting the frames with the overall maxima allows comparisons
+to be made between the different time frames. If you answer
+N to this prompt each time frame will have local X and
+Y maxima (which will be different for every frame).
+ 
+If you had entered N to the PLOT ALL TIME FRAME
+question you would be asked 
+\begin{verbatim}
+DO YOU WANT TO SPECIFY FIRST AND LAST TIME(S) TO PLOT? Y/N
+\end{verbatim}
+If you had entered N you will asked 
+several questions about each
+time frame. These prompts
+are self-explanatory, if somewhat tiresome especially when there are many time frames.
+It is therefore advisable to specify the first and last time you want to plot.
+
+\newline 
+If you had opted to plot against time by entering T (instead of S above)  you will be prompted
+\begin{verbatim}
+DO YOU WANT to write data(time) in a file? Y/N
+\end{verbatim}
+This is useful if you want to export the data file to another package for plotting
+(for example the radius as a function of time of all cells of an ICF target can be generated this way).
+Then you will be asked
+\begin{verbatim}
+WHAT DO YOU WANT TO PLOT?
+   1. CELL EDGES
+   2. HYDRODYNAMIC VELOCITIES
+   3. CELL CENTRES
+   4. DENSITY
+   5. PRESSURE
+   6. ELECTRON TEMPERATURE
+   7. ION TEMPERATURE
+   8. AVERAGE IONIZATION
+   9. ELECTRON DENSITY
+   0. RETURN TO SPACE-TIME-EXIT OPTION
+
+      ENTER CHOICE (0 - 9)
+ ?
+\end{verbatim}
+You are then given the option of only plotting part of the
+range on the X(time) or Y axis. You are then asked
+\begin{verbatim}
+ DO YOU WANT TO PLOT ALL CELLS? Y/N
+\end{verbatim}
+Any of the following types of responses are valid
+\begin{verbatim}
+ALL
+1 to 10
+1,3,12 to 25,45
+\end{verbatim}
+Except for the cell edges, velocities and cell centres it is not
+advisable to plot all the cells as the results are usually
+totally confusing.
+
+Some example output from FLIP3 (and FAL100FS.OUT) are shown in Figs 1 and 2. Figure 1 a plot obtained by
+opting to plot log electron temperature vs. distance for all times not using the overall maxima for 
+every time frame. Figure 2 shows the position of all cell centres plotted vs. time.
+ 
+\subsubsection{ION3}
+ION3 reads data from stream 12
+and writes to stream 15. 
+Therefore if your input data is in
+IAL100FS.OUT (as it would be if you used the COMMAND file in section 'RUNNING ON THE DEC ALPHA')
+and you want to call your output graphics file IAL100FS.PS,
+you need a command file such the following.
+\begin{verbatim}
+!ion3.com
+$set default disk_user3:[ad1.med103]
+$fortran ion3.for
+$link/executable=ion3 ion3,nag$libj06/lib,nagg$gks/lib,nag$library/lib,gks_opt/opt
+$assign week_disk:[public.week.ad1]ial100fs.out for012
+$assign week_disk:[public.week.ad1]ial100fs.ps  for015
+\end{verbatim}
+first execute the file using
+\begin{verbatim}
+@ION3
+\end{verbatim}
+then run the executable using
+\begin{verbatim}
+RUN ION3
+\end{verbatim}
+First you will be asked
+\begin{verbatim}
+DO YOU WANT TO PLOT ALL           65 POINTS? Y/N
+\end{verbatim}
+Most times you should enter y unless you want to read/plot data
+for a few cells only. Then you will be asked
+\begin{verbatim}
+RAL GKS 1.38 ALPHA/VMS version
+Enter minimum value of Y::(Default=1.40000E+01):
+\end{verbatim}
+All prompts in ION3 have have sensible defaults and if you hit the ENTER key after each query you should 
+obtain useful output.
+
+Figure 3 shows one of the plots of ion density vs. distance (for 4 ion stages). The position of the cell edges
+are shown below the X-axis, allowing the zoning of the run to be monitered.
+
+
+\subsubsection{XRLREC3}
+XRLREC3 plots the x-ray laser gain data for the recombination case (ISTAGE=1, 2 or 3). It reads data from stream 11
+and writes to stream 14. 
+Therefore if your input data is in
+XFPAP2.OUT 
+and you want to call your output graphics file XFPAP2.PS,
+you need a command file such the following.
+\begin{verbatim}
+!xrlrec3.com
+$set default disk_user3:[ad1.med103]
+$fortran/nooptimize xrlrec3.for
+$link/executable=xrlrec3 xrlrec3,nag$libj06/lib,nagg$gks/lib,nag$library/lib,gks_opt/opt
+$assign   week_disk:[public.week.ad1]xfpap2.out for011
+$assign   week_disk:[public.week.ad1]xfpap2.ps  for014
+\end{verbatim}
+first execute the file using
+\begin{verbatim}
+@XRLREC3
+\end{verbatim}
+then run the executable using
+\begin{verbatim}
+RUN XRLREC3
+\end{verbatim}
+First you will be asked
+\begin{verbatim}
+DO YOU WANT TO USE ABSOLUTE TIME OR TIME RELATIVE
+TO THE PEAK OF THE LASER PULSE? A/R
+\end{verbatim}
+Enter A or R. You will then be asked Y/N questions.
+\begin{verbatim}
+ ncell           50 ngain            3
+RAL GKS 1.38 ALPHA/VMS version
+DO YOU WANT TO PLOT GAIN VS RADIUS? Y/N
+\end{verbatim}
+You will also be given the option of plotting the alpha, beta
+etc.\ gain vs.\. time on separate plots  and then of plotting
+all the gains on one plot.
+
+Figure 4 shows some of the graphs obtained by plotting x-ray laser gain versus distance. Figure 5 shows 
+the efective gains (spatially integrated) for Alpha, Beta and Gamma lines vs. time.
+
+
+\subsubsection{XRLCOL3}
+XRLCOL3 plots the x-ray laser gain data for the Ne-like collisional case (ISTAGE=4). It reads data from stream 11
+and writes to stream 14.
+Therefore if your input data is in
+XGE1C.OUT
+and you want to call your output graphics file XGE1C.PS,
+you need a command file such the following.
+\begin{verbatim}
+!xrlrec3.com
+$set default disk_user3:[ad1.med103]
+$fortran/nooptimize xrlcol3.for
+$link/executable=xrlcol3 xrlcol3,nag$libj06/lib,nagg$gks/lib,nag$library/lib,gks_opt/opt
+$assign   week_disk:[public.week.ad1]xge1c.out for011
+$assign   week_disk:[public.week.ad1]xge1c.ps  for014
+\end{verbatim}
+first execute the file using
+\begin{verbatim}
+@XRLCOL3
+\end{verbatim}
+then run the executable using
+\begin{verbatim}
+RUN XRLCOL3
+\end{verbatim}
+First you will be asked
+\begin{verbatim}
+DO YOU WANT TO USE ABSOLUTE TIME OR TIME RELATIVE
+TO THE PEAK OF THE LASER PULSE? A/R
+\end{verbatim}
+Enter A or R. You will then be asked Y/N questions.
+\begin{verbatim}
+RAL GKS 1.38 ALPHA/VMS version
+DO YOU WANT TO PLOT GAIN VS RADIUS? Y/N
+\end{verbatim}
+
+You will also be given the option of plotting the  gain vs. time.
+on separate plots  and then of plotting
+ 
+Figure 6 shows some of the graphs obtained by plotting x-ray laser gain versus distance for the 196 Angstrom 
+line, while  Fig. 5 shows
+the efective gains (spatially integrated) for some lines (including the 196 Angstrom) vs. time.
+ 
+\newpage
+\vspace*{9.15in}
+Figure 1: FILP3 output - 
+Log electron temperature vs. distance.
+%set{counter}{}
+\newpage
+\vspace*{9.15in}
+Figure 2: FILP3 output -
+position of all cell centres plotted vs. time.
+\newpage
+\vspace*{9.15in}
+Figure 3: ION3 output -
+ion density vs. distance (for 4 ion stages)
+\newpage
+\vspace*{9.15in}
+Figure 4: XRLREC3 output -
+x-ray laser gain versus distance
+\newpage
+\vspace*{9.15in}
+Figure 5: XRLREC3 output -
+efective gains (spatially integrated) for Alpha, Beta and Gamma lines vs. time.
+\newpage
+\vspace*{9.15in}
+Figure 6: XRLCOL3 output -
+x-ray laser gain versus distance 
+\newpage
+\vspace*{9.15in}
+Figure 7: XRLCOL3 output -
+efective gains (spatially integrated) for some lines vs. time
+
+
+\section{Summary}
+It is hoped that this guide will provide enough detail for any
+user to run MED103. If you have any problems contact The Theory Group.
+The users are also advised to
+keep an unmodified version of the code and to include all personal additions/modification in a new version.
+When encoutering problems they should run the original version of the code and if the problem re-occurs,
+then contact the Theory Group with a copy of the input data file.
+
+If people are actively engaged in writing some piece of code that changes
+the physics, 
+this may be of interest to other users and we would like to hear about it. If some important
+piece of physics is lacking
+then of course, it would be our aim to include this in future versions of
+MEDUSA. 
+ 
+\begin{thebibliography}{9}
+\bibitem{cpc}JP Christiansen, DETF Ashby and KV Roberts
+{\sl MEDUSA A one-dimensional laser fusion code}
+Computer Phys Comm {\bf 7} 271-287 (1974)
+\bibitem{med101} PA Rodgers, AM Rogoyski and SJ Rose, RAL-89-127, Dec 1989.
+\bibitem{djaoui1}A Djaoui and SJ Rose, J. Phys. B: At. Mol. Opt. Phys.
+{\bf 25}, 2745-2762 (1992)
+\bibitem{Bhatia}AK Bhatia U Feldman  and JF Seely 
+{\it At. Data Nucl. Data
+Tables} {\bf 32} 435, (1985)
+\bibitem{djaoui2}A Djaoui and AA Offenberger, Phys. Rev. E, {\bf 50},
+4961 (1994)
+\bibitem{sjr}GJ Pert and SJ Rose, Appl. Phys. B, {\bf 50}, 307, (1990)
+\bibitem{Luciani}J F Luciani {\it et} al, Phys. Fluids {\bf 28}, 835, (1985)
+\end{thebibliography}
+\newpage
+\begin{center}
+{\LARGE\bf APPENDICIES}
+\end{center}
+\appendix
+\section{Arithmetic gridding}
+A further modification made in MED103 is the option of arithmetic
+gridding (this is where the thicknesses of the cells gradually
+increases or decreases within a layer rather than remaining identical).
+Each of the 3 layers may be altered independently. The
+gridding is based upon the formula:
+$$w_i = \left( {r_f^i -1 \over r_f^n -1} \right) \times S $$
+$$ \Delta_i = w_i - w_{i-1}$$
+$$ \Delta_1 = w_1$$
+where $w_i$ represents the co-ordinate relative to zero of the
+$i$th cell boundary,
+$\Delta_i$ is the width of the $i$th cell,
+$n$ is the number of cells in the layer, $i$ varies from 1 to
+$n$ and $S$ is the thickness of the layer (i.\ e.\ RINI, DRGLAS
+or DRPLAS).
+The factor in brackets varies between 0 and 1 depending on $i$ and
+the difference in cell thickness from one cell to the next is controlled
+by $r_f$ (i.\ e.\ RF1, RF2 or RF3).
+ 
+If $r_f$ is almost but not quite equal to 1.0 (e.\ g.\
+0.99999) then the
+gridding will be linear as in the old versions of MEDUSA.
+ 
+If  $r_f$=1.0 the denominator is zero so the
+code resets any input from 1.0 to 0.99999. This is also the
+default so to obtain a linear mesh either $r_f$=1.0 or $r_f$=0.99999
+can be used.
+ 
+It is only possible to fix any three of the four quantities $r_f$,
+$n$, $S$ and $\Delta_1$ (or any $\Delta_i$).
+Suppose, for example, we require a layer containing 10
+cells to have its first cell 10 times larger than its 10th cell. Using
+the formula
+$$r_f = \left( {\Delta_n \over \Delta_1 }\right)^{{1\over n-1}} $$
+we find $r_f=0.7743$. Given $r_f$ and $n$ the thickness
+of the layer may be specified. If we to specify the
+thickness of the beginning and end cell
+we lose control over the total thickness
+of the layer. To calculate the total thickness of the layer (i.\ e.\ one
+of RINI, DRGLAS and DRPLAS) use
+$$ S = \left( {r_f^n -1 \over r_f -1} \right) \times w_1 $$
+If, for example, we set $\Delta_1 = 10\mu$m and
+$\Delta_{10}=1\mu$m then the total thickness of the layer
+MUST be 40.87$\mu$m. Alternatively if we set
+$S =  100\mu$m (with $n = 20$ and $r_f =0.8361$)
+then $w_1=24.47\mu$m and $w_{10}=2.447\mu$m.
+ 
+It is not possible to control the number of cells,
+the ratio, the total thickness and
+the individual thicknesses simultaneously.
+ 
+This facility is very useful for a number of things. It can be used to
+ensure that the zoning is at its finest at the edge of a target where
+most detail is needed, without having to set up a large number
+of different layers. It can be used to interface between layers
+of differing cell width. This helps avoid jumps in the mass between
+consecutive cells that may cause problems.
+\newpage
+\section{A fortran program for calculating RF1, RF2 and RF3}
+\begin{verbatim} 
+c  Program to calculate rf value when thickness of first zone,
+c  total thickness of shell and number of zones are specified
+      PROGRAM MAIN
+      IMPLICIT DOUBLE PRECISION (a-h, m-z)
+      CHARACTER answer*1
+c  Inputting the data
+      WRITE(6,1000)
+1000  format(/1x,' Given the thickness of the first cell and the ' ,
+     & 'total thickness, this code calculates the RF value',/1x)
+ 1    WRITE (6,*) 'Please enter Delta1(in any units): '
+      READ (5,*) delta1
+      WRITE (6,*) 'Please enter total thickness(same units as delta1):'
+      READ (5,*) thickness
+      WRITE (6,*) 'Please enter number of meshes:'
+      READ (5,*) meshes
+c  Is the data correct????
+      WRITE (6,*) ' '
+ 3    WRITE (6,*) 'Is the above information correct (y/n)?'
+      READ (5,FMT='(A)') answer
+      IF (answer .EQ. 'y' .OR. answer .EQ. 'Y') GOTO 5
+      IF (answer .EQ. 'n' .OR. answer .EQ. 'N') GOTO 1
+      GOTO 3
+c  Creating blank space
+ 5    DO i = 1, 1
+         WRITE (6,*) ' '
+      END DO
+c  Doing the calculation
+      rdm = 1.0e30
+      DO 10 i = 10000, 990000
+         rf = float(i)*1.e-05
+         IF(rf .EQ. 1.000) GOTO 10
+         rd = (ABS (delta1-thickness*(rf-1)/(rf**meshes -1))/delta1)
+         IF (rd .LT. rdm) THEN
+            rf2 = rf
+            rdm = rd
+         END IF
+ 10   CONTINUE
+      rf = rf2
+      rd = rdm
+      del1=thickness*(rf-1.)/(rf**meshes-1.)
+      deln=del1*rf**(meshes-1)
+      delnm1 = del1*rf**(meshes-2)
+      delnm2 = del1*rf**(meshes-3)
+c  Displaying the results
+      WRITE (6,*) '                          RESULTS'
+      WRITE (6,*) '                          -------'
+      WRITE (6,*) '          Delta1             = ', delta1
+      WRITE (6,*) '          Total thickness    = ', thickness
+      WRITE (6,*) '          Number of meshes   = ', meshes
+      WRITE (6,*) ' '
+      WRITE (6,4000)rf,del1,deln,deln/delnm1
+4000  format( '  rf ',1pe14.7,'  Delta1 = ',e14.7,' Deltan = ',e14.7,
+     &'  delta n/delat n-1   = ', e14.7)
+      WRITE (6,5000)1/rf,deln,del1,delnm1/deln
+5000  format( '  rf ',1pe14.7,'  Delta1 = ',e14.7,' Deltan = ',e14.7,
+     &'  delta n/delat n-1   = ', e14.7)
+      WRITE (6,*) ' '
+      WRITE (6,2000)
+2000  format(' Use rf .LT. 1 for meshes decreasing towards ',
+     &'the laser beam (left to right)')
+      WRITE (6,3000)
+3000  format( ' Use rf .GT. 1 for meshes increasing towards ',
+     &'the laser beam ')
+      WRITE (6,*) ' '
+c  Re-run the program???
+      WRITE (6,*) ' '
+ 20   WRITE (6,*) 'Do you want to calculate another value (y/n)? '
+      READ (5, FMT='(A)') answer
+      WRITE (6,*) ' '
+      IF (answer .EQ. 'y' .OR. answer .EQ. 'Y') THEN
+         GOTO 1
+      ELSEIF (answer .EQ. 'n' .OR. answer .EQ. 'N') THEN
+         GOTO 30
+      ELSE
+         GOTO 20
+      ENDIF
+ 30   STOP
+      END
+\end{verbatim}
+\newpage
+\section{Special features}
+
+
+
+\end{document}

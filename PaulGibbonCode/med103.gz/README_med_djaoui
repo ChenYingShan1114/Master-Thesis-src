@@ -1,0 +1,586 @@
+c                           med103
+c                           =======
+c                  a one-dimensional lagrangian
+c                  ----------------------------
+c                  laser-plasma interaction code
+c                  -----------------------------
+c
+c                      a. djaoui ' s version
+c     I have attempted to modify the code such that it is compatible 
+c     with the old versions (ie med101) and will run a med101 input data
+c     without the need for any changes. The only exception is 
+c     the variable SAHA. In order to run the NLTE average atom
+c     ionisation model SAHA should be set to 2.
+c     For very short pulses the user can now specify  DTMAX in the input 
+c     nlhf=t  include high field correction to ib 
+c     nltnl=t  include tunnel ionisation in the rates
+c
+c     this program must be compiled in double precision on the ibm
+c     using the autodbl option of the fortvs2 compiler
+c
+c     x-ray laser post-processor package (radran and subs by sjr/ad1)
+c     and neon-like  for si(14) ar(18) ti(22) fe(26)
+c     ge(32) kr(36) (ad1)
+c     are included and may be turned on via the namelist file.
+c     mprint has been tidied up and supports an output file to
+c     stream 15 for use with flipper the graphics post-processor
+c     (by pr).
+c     xrl code has also been modified slightly (amr) to give
+c     effective gain as observed by experimentalists.
+c     stream 11 has been added to give output to interface
+c     with flipper carrying gain data both spatially dependent
+c     and effective gain (amr).
+c     code has also been altered so that it will compile and
+c     run identically on the cray and the ibm. the only loss
+c     has been that of the timing subroutines daytim, runtim
+c     and jobtim (amr).
+c                 index of subroutines
+c                 prologue                                          clas
+c     labrun      label the run
+c     clear       clear variables and arrays
+c     preset      set default values
+c     data        define   data specific to run
+c     auxval      set auxiliary values
+c     inital      define physical initial conditions
+c     start       prepare to start the calculation
+c     source      change standard initial conditions
+c     chinic      check initial conditions
+c                 calculation                                       clas
+c     stepon      step on the calculation
+c     motion      controls the motion
+c     laser(1)    produces the laser power
+c     gie         the terms of the energy equation at level n-1
+c     stit        starts the iteration by assuming level 1 = 3
+c     statei(1)   describes the state of ions
+c     statee(1)   describes the state of electrons
+c     coulog      evaluates the coulomb logarithm
+c     absorb      evaluates the absorption of laser light
+c     brems       the loss rate through bremsstrahlung
+c     xchang(1)   the rate of exchange of energy
+c     fusion      the energy released by thermonuclear reactions
+c     hcduct      thermal conductivities
+c     abcd        calculates the terms a, b, c and d
+c     findt       the temperature equation (gauss-elimination)
+c     timstp      most restrictive value of timestep
+c     speed       the hydrodynamic velocities
+c     neuman      the artificial viscous pressure
+c     moveon      advances the lagrangian coordinates
+c     volume      volumes and densities
+c     cverge      examines the convergence of ti, te and u
+c     energy      kinetic, thermal energy. energy input and gain.
+c     shift       shifts the levels 1 - 5 back
+c     formp       forms the hydrodynamic pressure
+c     boundy(1)   sets the boundary values
+c     exam        examines present state of system
+c     revers      revers the calculation if break occurs
+c     burnup      burn-up of deuterium and tritium
+c                 output                                            clas
+c     output(1)   control the output
+c     mprint(1)   main printer
+c     select      select the output
+c                 epilogue                                          clas
+c     tesend      test for completion of run
+c     endrun      terminate the run
+c                 diagnostics                                       clas
+c     report(3)   reports diagnostic information
+c     clist(2)    print common variables
+c     arrays(2)   print common arrays
+c                 dummy subroutines                                  cla
+c     hdcopy(1)   production of hardcopies
+c                 index of common blocks
+c                 general olympus data
+c     combas      basic system parameters
+c     comddp      diagnostics and program development
+c                 physics
+c     comhyd      hydrodynamics
+c     comth       thermodynamics
+c     comie       ions and electrons
+c     comlas      laser variables
+c     comfus      thermonuclear reactions
+c     comen       energies
+c     comcon      physics control
+c                 numerical scheme
+c     comnc       numerical control parameters
+c     comnum      mesh and numerical methods
+c                 house-keeping
+c     comadm      administrative variables
+c                 input-output
+c     comout      input-output control variables
+c                 index of common variables
+c                 physics
+c     comhyd      hydrodynamics
+c     dm          cell masses                                          r
+c     p3          hydrodynamic pressure at level 3                     r
+c     pini        initial hydrodynamic pressure                        r
+c     r1          coordinates of cell boundaries at level 1            r
+c     r3          coordinates of cell boundaries at level 3            r
+c     r5          coordinates of cell boundaries at level 5            r
+c     rho1        physical density at level 1                          r
+c     rho3        physical density at level 3                          r
+c     rho5        physical density at level 5                          r
+c     rhoini      initial value of rho                                 r
+c     rhor        integral of rho * r                                  r
+c     rini        initial dimension of system                          r
+c     time        the real time in the calculation                     r
+c     u2          hydrodynamic velocities at level 2                   r
+c     u4          hydrodynamic velocities at level 4                   r
+c     uedge       boundary velocity at level 3                         r
+c     v1          specific volumes at level 1                          r
+c     v3          specific volumes at level 3                          r
+c     v5          specific volumes at level 5                          r
+c     comth       thermodynamics
+c     ddroe1      partial derivative of electron energy                r
+c     ddroe3      partial derivative of electron energy                r
+c     ddroi1      partial derivative of ion energy                     r
+c     ddroi3      partial derivative of ion energy                     r
+c     ddte1       partial derivative of electron energy                r
+c     ddte3       partial derivative of electron energy                r
+c     ddti1       partial derivative of ion energy                     r
+c     ddti3       partial derivative of ion energy                     r
+c     gammae      ratio of specific heats (electrons)                  r
+c     gammai      ratio of specific heats (ions)                       r
+c     xappae      electron thermal conductivity                        r
+c     xappai      ion thermal conductivity                             r
+c     pe1         electron pressure at level 1                         r
+c     pe3         electron pressure at level 3                         r
+c     pi1         ion pressure at level 1                              r
+c     pi3         ion pressure at level 3                              r
+c     te1         electron temperature at level 1                      r
+c     te3         electron temperature at level 3                      r
+c     teini       initial electron temperature                         r
+c     ti1         ion temperature at level 1                           r
+c     ti3         ion temperature at level 3                           r
+c     tiini       initial ion temperature                              r
+c     comie       ions and electrons
+c     brems1      rate of bremsstrahlung at level 1                    r
+c     brems3      rate of bremsstrahlung at level 3                    r
+c     degen       degree of electron degeneracy                        r
+c     degmax      upper limit of partial degeneracy                    r
+c     degmin      lower limit of partial degeneracy                    r
+c     effz        average charge number                                r
+c     fz1         average charge at level 1
+c     fz3         average charge at level 3
+c     fzsq1       average <z*z> at level 1
+c     fzsq3       average <z*z> at level 3                             r
+c     eixch2      rate of ion-electron energy exchange                 r
+c     xlc          the coulomb logarithm
+c     xmieff       average ion mass number
+c     ne          electron number density                              r
+c     ni          number density of ions and neutrals                  r
+c     omega1      time rate of ion-electron energy exchange            r
+c     pmass       proton mass                                          r
+c     comlas      laser variables
+c     alpha1      absorption coefficient                               r
+c     elas1       current laser energy deposited                       r
+c     xamda1      wave-length of laser light                           r
+c     xaser1      description of laser pulse                           r
+c     plas1       laser power as a function of time                    r
+c     rabs1       coordinate with critical density                     r
+c     rocri1      critical density value for absorption                r
+c     xecri1      critical electron density                            r
+c     xl1         rate of energy absorbed at level 1                   r
+c     xl3         rate of energy absorbed at level 3                   r
+c     nabs1       number of cell with critical density                 i
+c     comfus      thermonuclear reactions
+c     deuter      initial deuterium fraction                           r
+c     f1d         fraction of deuterium at level 1                     r
+c     f3d         fraction of deuterium at level 3                     r
+c     f1h         fraction of hydrogen at level 1                      r
+c     f3h         fraction of hydrogen at level 3                      r
+c     f1he3       fraction of helium3 at level 1                       r
+c     f3he3       fraction of helium3 at level 3                       r
+c     f1he4       fraction of helium4 at level 1                       r
+c     f3he4       fraction of helium4 at level 3                       r
+c     f1neu       fraction of neutrons released at level 1             r
+c     f3neu       fraction of neutrons released at level 3             r
+c     f1ntrl      fraction of neutrals at level 1                      r
+c     f3ntrl      fraction of neutrals at level 3                      r
+c     f1t         fraction of tritium at level 1                       r
+c     f3t         fraction of tritium at level 3                       r
+c     f1x         fraction of an extra element at level 1              r
+c     f3x         fraction of an extra element at level 3              r
+c     heliu3      initial fraction of helium3                          r
+c     heliu4      initial fraction of helium4                          r
+c     hydrog      initial fraction of hydrogen                         r
+c     xetral      initial fraction of neutrals                         r
+c     xtrlms      mass number of neutral element                       r
+c     pneut1      neutron power at level 1                             r
+c     pneut3      neutron power at level 3                             r
+c     r1dd        number of d-d reactions at level 1                   r
+c     r3dd        number of d-d reactions at level 3                   r
+c     r1dhe3      number of d-he3 reactions at level 1                 r
+c     r3dhe3      number of d-he3 reactions at level 3                 r
+c     r1dt        number of d-t reactions at level 1                   r
+c     r3dt        number of d-t reactions at level 3                   r
+c     rneut1      neutron flux at level 1                              r
+c     rneut3      neutron flux at level 3                              r
+c     tinucl      lower threshold for thermonuclear reactions          r
+c     totneu      total number of neutrons released                    r
+c     tritiu      initial fraction of tritium                          r
+c     xmass       mass number of extra element                         r
+c     xtra        initial fraction of extra element                    r
+c     xz          charge number of extra element                       r
+c     ye1         fusion energy apportioned to electrons               r
+c     ye3         fusion energy apportioned to electrons               r
+c     yi1         fusion energy apportioned to ions                    r
+c     yi3         fusion energy apportioned to ions                    r
+c     yield       ratio of thermonuclear/laser energies                r
+c     comen       energies
+c     eefuse      thermonuclear energy given to electrons              r
+c     eerror      error in the energy calculation                      r
+c     eifuse      thermonuclear energy given to ions                   r
+c     eindt1      energy input at level 1                              r
+c     eindt3      energy input at level 3                              r
+c     einput      total energy input                                   r
+c     eloss       total energy loss through ff radiation               r
+c     en          total energy of system                               r
+c     eneutr      total energy of escaping neutrons                    r
+c     pv          total thermal energy of system                       r
+c     usqm        total kinetic energy of system                       r
+c     comcon      physics control
+c     pmin        permissible minimum of pressure                      r
+c     rhomin      permissible minimum of density                       r
+c     temin       permissible minimum of electron temperature          r
+c     timin       permissible minimum of ion temperature               r
+c     umin        smallest velocity allowed for safety                 r
+c     mstep       timestep counter                                     i
+c     ncase       selects boundary conditions                          i
+c     ngeom       selects the geometry                                 i
+c     mlbrms      program switch for bremsstrahlung                    l
+c     mlecon      program switch for electron heat conduction          l
+c     mlfuse      program switch for thermonuclear reactions           l
+c     mlicon      program switch for ion heat conduction               l
+c     mlx         program switch for i-e exchange                      l
+c     nlabs       switch : absorption by inverse bremsstrahl.          l
+c     nlbrms      switch : bremsstrahlung                              l
+c     nlburn      switch : burn-up of d and t                          l
+c     nlcri1      switch : dump laser power at rocri1                  l
+c     nldepo      switch : deposit thermonuclear energies              l
+c     nlecon      switch : electron thermal conduction                 l
+c     nlfuse      switch : thermonuclear reactions                     l
+c     nlicon      switch : ion thermal conduction                      l
+c     nlmove      switch : hydrodynamic motion                         l
+c     nlpfe       switch : perfect electron gas laws                   l
+c     nlpfi       switch : perfect ion gas laws                        l
+c     nlx         switch : ion-electron energy exchange                l
+c                 numerical scheme
+c     comnc       numerical control parameters
+c     ak0         control the time centering                           r
+c     ak1         control dt by soundspeed                             r
+c     ak2         control dt by variations in volume                   r
+c     ak3         control dt by variations in ti                       r
+c     ak4         control dt by variations in te                       r
+c     ak5         spare dt control parameter                           r
+c     ak6         spare dt control parameter                           r
+c     ak7         control rate of lase energy input                   r
+c     ak8         controls rate of change of energies in each zone AA
+c     ak9         control rate of change of z*  (max allowed ak9)AA    r
+c     bneum       determines the rate of shock heating                 r
+c     deltat      user specified value of dt                           r
+c     dt2         timestep (t3-t1)                                     r
+c     dt3         timestep (t4-t2)                                     r
+c     dt4         timestep (t5-t3)                                     r
+c     dtemax      controls convergence of te                           r
+c     dtimax      controls convergence of ti                           r
+c     dtmax       maximum value of dt                                  r
+c     dtmin       minimum value of dt                                  r
+c     dumax       controls convergence of u                            r
+c     rdt2        = 1.0 / dt2                                          r
+c     rdt3        = 1.0 / dt3                                          r
+c     rdt4        = 1.0 / dt4                                          r
+c     nceldt      the cell number that sets the limit of dt            i
+c     ncondt      condition determining dt                             i
+c     nit         current number of iterations                         i
+c     nitmax      maximum number of iterations allowed                 i
+c     break       break the calculation                                l
+c     nlgoon      iterations converge                                  l
+c     nlite       switch : solve equations by iterations               l
+c     comnum      mesh and numerical methods
+c     ae          coefficient in electron energy equation              r
+c     ai          coefficient in ion energy equation                   r
+c     be          coefficient in electron energy equation              r
+c     bi          coefficient in ion energy equation                   r
+c     ce          coefficient in electron energy equation              r
+c     ci          coefficient in ion energy equation                   r
+c     de          coefficient in electron energy equation              r
+c     di          coefficient in ion energy equation                   r
+c     e           auxiliary array used for gauss elimination           r
+c     f           auxiliary array used for gauss elimination           r
+c     ge          coefficient in electron energy equation              r
+c     gi          coefficient in ion energy equation                   r
+c     q2          viscous pressure at level 2                          r
+c     q4          viscous pressure at level 4                          r
+c     teite       level 3 value of te from previous iteration          r
+c     tiite       level 3 value of ti from previous iteration          r
+c     uite        level 4 value of u from previous iteration           r
+c     mesh        number of cells in mesh                              i
+c     nj          auxiliary variable (=njp1-1=mesh)                    i
+c     njm1        auxiliary variable (=nj-1)                           i
+c     njp1        number of cell boundaries (=mesh+1)                  i
+c     nl          number of cells in mesh (=mesh)                      i
+c     nlm1        auxiliary variable (=nl-1)                           i
+c     nlp1        auxiliary variable (=nl+1)                           i
+c                 house-keeping
+c     comadm      administrative variables
+c     piq         general purpose array                                r
+c     tstop       maximum value of time permitted                      r
+c     maxdim      maximum permissible mesh size                        i
+c     maxrun      maximum number of timesteps permitted                i
+c     ndump       frequency of dumping common areas                    i
+c     nrep        repetition of film frames                            i
+c     nldump      switch : dumping of common areas                     l
+c     nlemp       switch : emergency printing                          l
+c                 input-output
+c     comout      input-output control variables
+c     buf1        output buffer (r)                                    r
+c     buf2        output buffer (u)                                    r
+c     buf3        output buffer (density)                              r
+c     buf4        output buffer (pressure)                             r
+c     buf5        output buffer (ion temperature)                      r
+c     buf6        output buffer (electron temperature)                 r
+c     scp         input-output scaling factor for pressure             r
+c     scr         input-output scaling factor for coordinates          r
+c     scrho       input-output scaling factor for density              r
+c     scte        input-output scaling factor for te                   r
+c     scti        input-output scaling factor for ti                   r
+c     sctime      input-output scaling factor for time                 r
+c     nfilm       frequency of film frame production                   i
+c     nhdcpy      frequency of hardcopy production                     i
+c     np1         array printing selector : start                      i
+c     np2         array printing selector : end                        i
+c     np3         array printing selector : increment                  i
+c     nprnt       frequency of printing                                i
+c     nlfilm      switch : film production                             l
+c     nlhcpy      switch : hardcopy production                         l
+c     nlprnt      switch : printing                                    l
+c     ztnext      time for next printout
+c     -----------------------------------------------------------
+c     it is possible
+c     to  alter the basic performance of the medusa code. for
+c     all 4 cases of boundary conditions it is possible  to  alter
+c     pressure, temperature, velocity etc. at the boundary cell in
+c     subprogram "boundy" (2.25).  also the  shape  of  the  laser
+c     pulse  for  calculations on case 1 can be changed in subpro-
+c     gram  "laser"  (2.3)  provided  the  appropriate  quantities
+c     (laser  power,  energy,  pulse  length,  switch on-off times
+c     etc.) are stored in array "xaser1" as described in (2.3) and
+c     also  in  the  list  presented below. use can be made of the
+c     all-purpose buffer "piq" as long as those elements of  "piq"
+c     which  appear  in the list given below are not affected.  if
+c     particular modifications to  the  computational  scheme  are
+c     required  these  should  be  coded up in subprogram "expert"
+c     (0.4) as explained in the "computer physics  communications"
+c     paper  which  describes  the olympus system.  finally, it is
+c     possible to change many of the coefficients which  determine
+c     the physical processes involved by setting selected elements
+c     of array "piq" to values different from  zero  as  explained
+c     below.   in  the  list below we present all variables of the
+c     namelist "newrun" which is  read  in  by  subprogram  "data"
+c     (1.4).  the  list  contains  examples of the range of values
+c     possible and also refers to the default value of a variable.
+c     'newrun'  which is read in by subprogram  'data' (1.4). the list
+c     contains examples of the range of values possible and also refers
+c     to the default value of a variable.
+c
+c******** c o n t e n t s  o f  n e w r u n  *********
+c
+cname  value       purpose of variable                     default value
+c
+cak0=50.,          control the time centering                  50.0
+cak1=0.25,          control dt by soundspeed                    0.25
+cak2=0.25,          control dt by variations in volume          0.25
+cak3=0.25,         control dt by variations in ti              0.25
+cak4=0.25,         control dt by variations in te              0.25
+cak5=0.0,          spare dt control parameter                  0.0
+cak6=0.0,          spare dt control parameter                  0.0
+cak7=0.0,          spare dt control parameter                  0.0
+cak8=0.0,          control rate of input energy                0.0
+cak9=0.0,          control rate of ionisation energy           0.0
+cbneum=1.2,        determines the rate of shock heating        1.0
+cdeltat=1.0e-20,   user specified value of dt                  0.0
+cdeuter=0.5,       initial fraction of deuterium               0.5
+cdtemax=0.2,       controls convergence of te                  0.1
+cdtimax=0.2,       controls convergence of ti                  0.1
+cdumax=0.2,        controls convergence of u                   0.1
+cgammae=1.667,     ratio of specific heats (electrons)         1.667
+cgammai=1.667,     ratio of specific heats (ions)              1.667
+cheliu3=0.0,       initial fraction of helium3                 0.0
+cheliu4=0.0,       initial fraction of helium4                 0.0
+chydrog=0.0,       initial fraction of hydrogen                0.0
+cxamda1=1.0e-6,    wavelength of laser light                   1.0e-5
+cnetral=0.0,       initial fraction of neutrals                0.0
+cntrlms=0.0,       atomic mass number of neutrals              0.0
+crhoini=100.0,     initial constant density                    124.0
+crini=0.001,       initial dimension of system                 0.00048
+cscp=1.0,          scale input-output of pressure              1.0
+cscr=100.0,        scale input-output of coordinates           1.0
+cscrho=1000.0,     scale input-output of density               1.0
+cscte=1.0,         scale input-output of electron temperature  1.0
+cscti=1.0,         scale input-output of ion temperatureature  1.0
+csctime=1.0e6,     scale input-output of time                  1.0
+cteine=5.0e.,       initial electron temperature                5.0e3
+ctiini=5.0e3,      i5itial ion temperature                     5.0e3
+ctinucl=1.0e7,     ignition temperature (fusion)               1.0e7
+ctritiu=0.5,       initial fraction of tritium                 0.5
+ctstop=0.1,        maximum value of time permitted             1.0e-6
+cxmass=0.0,        mass number of extra element                0.0
+cxtra=0.0,         initial fraction of extra element           0.0
+cxz=0.0,           charge number of extra element              0.0
+cmesh=40,          number of cells in mesh                     40
+cncase=1,          boundary conditions : laser                 1
+cncase=2,          boundary conditions : applied wall temperature
+cncase=3,          boundary conditions : applied wall pressure
+cncase=4,          boundary conditions : applied wall velocity
+cndump=1,          frequency of dumping common areas           10
+cnfilm=1,          frequency of film frame production          1
+cngeom=1,          plane geometry
+cngeom=2,          cylindrical geometry
+cngeom=3,          spherical geometry                          3
+cnhdcpy=500,       frequency of hardcopy production            100
+cnitmax=4,         maximum number of iterations allowed        5
+cnp1=1,            array printing selector : start             1
+cnp2=40,           array printing selector : end               40
+cnp3=2,            array printing selector : increment         2
+cnprnt=100,        frequency of printing                       100
+cnrep=1,           repetition of film frames                   0
+cnlabs=f,          switch : absorption by inverse bremsstrahl. t
+cnlbrms=f,         switch : bremsstrahlung                     t
+cnlburn=t,         switch : burn-up of d and t                 t
+cnlcri1=f,         switch : dump laser power at rocri1         t
+cnldepo=t,         switch : deposit thermonuclear energies     t
+cnldump=f,         switch : dumping of common areas            f
+cnlecon=t,         switch : electron thermal conduction        t
+cnlemp=t,          switch : emergency printing                 t
+cnlfilm=t,         switch : film production                    t
+cnlfuse=t,         switch : thermonuclear reactions            t
+cnlhcpy=t,         switch : hardcopy production                t
+cnlicon=f,         switch : ion thermal conduction             t
+cnlite=t,          switch : solve equations by iterations      t
+cnlmove=t,         switch : hydrodynamic motion                t
+cnlpfe=f,          switch : perfect electron gas laws          t
+cnlpfi=t,          switch : perfect ion gas laws               t
+cnlprnt=t,         switch : printing                           t
+cnlx=f,            switch : ion-electron energy exchange       t
+c
+cxaser1(1)=0.0,    time to switch on the laser                 0.0
+cxaser1(2)=1.0e9,  initial power level                         0.0
+cxaser1(3)=2.0e-8, pulse duration                              0.0
+cxaser1(4)=2.0,    pulse shape factor                          0.0
+cxaser1(5)=2.0e-8, time to switch off the laser                0.0
+cxaser1(6)=1.0e14, maximum permissible power level             0.0
+cxaser1(7)=2.0e4,  maximum energy available                    0.0
+cc
+cpiq(3)=1.0,       determines boundary value of pressure or te 0.0
+cpiq(4)=1.25,      determines boundary value of pressure       0.0
+cpiq(5)=1.0,       determines boundary value of te             0.0
+cpiq(6)=1.0e4,     determines boundary value of pressure       0.0
+cpiq(8)=1.0,       modify boundary pressure in case 1          0.0
+cpiq(11)=1.0,      change initial coordinates                  0.0
+cpiq(12)=1.0,      change initial density distribution         0.0
+cpiq(13)=1.0,      change initial composition of pellet        0.0
+cpiq(20)=0.1,      modify coulomb logarithm coefficient        0.0
+cpiq(21)=5.0,      modify absorption coefficient               0.0
+cpiq(24)=2.0,      modify bremsstrahlung coefficient           0.0
+cpiq(25)=1.0,      modify exchange rate coefficient            0.0
+cpiq(26)=-0.999,   modify ion conduction coefficient           0.0
+cpiq(27)=-0.5,     modify electron conduction coefficient      0.0
+cpiq(31)=1.0,      print all of buf1                           0.0
+cpiq(32)=-1.0,     no printing of buf2                         0.0
+cpiq(33)=0.0,      normal printing of buf3 from np1 to np2/np3 0.0
+cpiq(34)=-1.0,     no printing of buf4                         0.0
+cpiq(35)=0.0,      normal printing of buf5 from np1 to np2/np3 0.0
+cpiq(36)=3.0,      print all of buf6                           0.0
+c
+c                   c1.1     basic system parameters
+cnrun=500,         number of timesteps to be run            999999
+c                  additional pulse shapes
+c
+c up to five gaussion pulses if gauss=1.0,   anpuls=1.,2.,3.,4.,5.,
+c 1st : xaser1(6)=pmax :    xaser1(4)plenth, :  xaser1(2)=pmult,
+c     :fraction of pmax:    plenth for nth   :  pmult for nth pulse
+c 2nd : piq(38)= 1.00, :    piq(42)=6.0e-12, :  piq(46)=168.334,
+c 3rd : piq(39)= 0.0,  :    piq(43)=0.00000, :  piq(47)=0.0,
+c 4th : piq(40)= 0.0,  :    piq(44)=0.00000, :  piq(48)=0.0,
+c 5th : piq(41)= 0.0,  :    piq(45)=0.00000, :  piq(49)=0.0,
+c
+c       triangular pulse
+c piq(37) =gauss < 0 for triangular pulse
+c ad1 gauss = -1 (triangular) -2 (triangular with flat top)
+c triangular pulse with prepulse and flat top can be set as
+c prepulse power from 0 at time 0 to xaser1(21) w/m**2 at time xaser1(20
+c linear incresase of power to pmax=xaser1(6) for plenth=xaser1(4)
+c flat top at xaser1(6) for xaser1(22)
+c then linear decrease to zero at toff=xaser1(5)
+c        gauss must be = -2.
+c        time dependent excitation ionisation + additional variables
+c
+c nlres=.true. restart case from previous run
+c saha=2.0, time dependent excitation and ionisation
+c bbtrap trapping factor for bb radiation 0 no trap 1 full trap
+c fbtrap trapping factor for bound-free radiation
+c
+c idrflg=1, switch dielectronic recombination on
+c drmul =   multiplying factor for dielectronic recombination
+c fwide =   width of focus in x-ray laser experiment
+c
+c                  x-ray laser calculations
+c     icxrl sets whether xrl calculations are carried out
+c     icxrl=1 true       icxrl=0 false
+c choose ionisation stage
+c istage = 1   h-like
+c istage = 2   li-lik
+c istage = 3   na-like
+c istage = 4   ne-like
+c istage = 5   ni-like
+c set optical depth flag
+c idflg=0  - no optical depth correction
+c idflg=1  - include optical depth correction
+c ropmul is the factor multiplying the optical depth
+c     ropmul=0.0
+c set thermal band flag
+c itbflg=0 - no thermal band
+c itbflg=1 - force population of highest level to be in lte
+c     itbflg=1
+c set motional stark broadening flag
+c istflg=0 - do not include motional stark broadening
+c istflg=1 - include motional stark broadening on the balmer alpha line
+c     istflg=0
+c set photopumping flag and values
+c ipuflg=0 - do not include photopumping
+c ipuflg=/0 - include photopumping
+c tpon - time pump on
+c tpoff - time pump off
+c nlp - lower level for the pump
+c nup - upper level for the pump
+c     ipuflg=1
+c     tpon=2.15e-10
+c     tpoff=2.85e-10
+c     nlp=1
+c     nup=3
+c     rmpd=0.002
+c setup wavelength of the lasing line(in cm)
+c     dlamda=81.0e-08
+c setup lengths used in the axial line intensity calculation
+c     nlmax=2
+c     fl(1)=0.0001
+c     fl(2)=0.55
+c tape15 is used for dumping the simulation state in order to restart
+c tape16 is used for readind restart information when nlres=.true.
+c 0.0 fortran main program
+c c1.1 basic system parameters
+c end of basic system parameters
+c ad1 * suppress error messages
+c     overflow  (gt 16**63 = 7.2e75)
+c      CALL errset(207,256,-1,-1)
+c     underflow (lt 16**-65 = 5.4e-79)
+c      CALL errset(208,256,-1,-1)
+c time allocated to job
+c     call jobtim(altime)
+c set up the basic control data
+      CALL basic
+c print date and time
+c     call daytim
+c control the run
+      CALL cotrol
+      STOP 1000
+      END

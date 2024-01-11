@@ -1,0 +1,22 @@
+  Methanol droplet simulation
+  Planar geometry with free boundaries  (piq(55) = 2.0)      
+  Intensity = 5.e15 W/cm**2  @ 0.8 mu, 100fs fwhm (60 fs 1/e)
+  Run time 1 ns; initial radius 15 microns                     
+***************************************
+ $newrun
+  xamda1 = 0.8e-6,   gauss = 1.0,     anpuls = 1.0,     toff = 0.1,
+  plenth = 60e-15,  pmax = 5.e19,    pmult = 10.,
+  ngeom = 1,         piq(55) = 2.,    teini = 1.e4,     tiini = 1.e4,
+  mesh = 200,        rini = 15.e-6,   rhogas = 791.0,   rf1 = 0.99,
+  xz = 3.0,          xmass = 5.33,     fne = 1.0,
+  zglas = 0.,       drglas = 1.e-6,  roglas = 2690.,   rf2 = 0.999,
+  xz2 = 13.,         xmass2 = 27.,    fne2 = 1.0,
+  zplas = 0.,        drplas = 0.e-0,  roplas = 0.,      rf3 = 0.,
+  xz1 = 0.,          xmass1 = 0.,     hydrog = 0.,
+  nprnt = -100, tstop=1.e-9,   nrun=80000,
+  np3 = 1,      nlemp=f,
+  nlbrms = t,   flimit = 10.,   saha = 1.0,
+  anabs = 1.0,  fhot = 1.0,     fthot = -1.,    rhot = 1.0,
+  state = 0.0,  nlpfe = f,      ifrsta=1, ilosta=0, ihista=5,
+  nt1 = 1, nt2=60
+ $end   

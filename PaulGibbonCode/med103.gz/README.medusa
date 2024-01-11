@@ -1,0 +1,50 @@
+This package is a self-contained set of programs for compiling and running
+the MEDUSA code on a unix workstation or PC.
+
+Files included:
+
+	med103.f		Medusa source code (FORTRAN 77)
+	
+	medgraf.f		Graphics postprocessor: splits output file
+				into snapshots of hydro variables
+				
+	timehist.f		Computes time-histories of certain variables at
+				user-defined positions in plasma
+				
+	ionhist.f		Time-histories of ion populations (average atom)
+	
+	ioutils.f		I/O utility library
+	
+	Makefile		makefile for building code - modify according
+				to local compiler needs/optimisation
+				
+				Sample input decks
+	prepulse.ind		100 fs pulse on Al target
+	plastic.ind		CH target
+	droplet.ind		Methanol droplet
+
+	prepulse		Sample shell scripts for running code (optional)
+	plastic
+	droplet			Open boundary methanol droplet
+					
+	manual.tex	}	Tex/PS version of manual (minus figures).
+	manual.ps	}	
+				 
+
+
+To compile:
+
+	make all
+
+To run:
+	Copy & edit input deck and run script:
+	cp prepulse.ind myrun.ind
+	cp prepulse.sh  myrun.sh
+	
+	./myrun.sh		# executes code, placing output data in 'RUNDIR'
+				# (see script)
+				
+
+
+
+

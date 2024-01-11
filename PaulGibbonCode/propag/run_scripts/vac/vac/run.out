@@ -1,0 +1,141 @@
+
+
+
+  DRELP  run on  05/11/2022
+Start time:  10:59     GMT+0800
+ Initial phase   0.00000000    
+
+Laser-plasma parameters
+=======================
+
+Pulse length (fs)        20000.00 =     47092.43 w0**-1
+Spot size (mu)              10.00
+Intensity  (Wcm-2)      1.926E+18
+Irradiance (Wcm-2mu2)   1.232E+18
+Background density:      1.00E+10
+Critical density n_c:    1.56E+21
+Plasma length (mu):      6000.00
+Leading edge (mu):          0.00
+Target gas:                   H 
+Laser power (TW)           6.0257
+Pcrit (TW)           ************
+P/Pc:                      0.0000
+n_e/n_c:                 5.74E-12
+Cavitation Dn_e/n_e:     1.00E+00
+
+Focussing:
+==========
+
+Rayleigh length (mu):      785.397
+f-number                    10.000
+Focal length: (mu)        2000.000
+Lens width:   (mu)         200.000
+Initial spot (mu):           27.36
+Initial Intensity:       2.57E+17
+
+
+Power contours at:
+          0.500
+          0.640
+          0.700
+          0.860
+
+Mesh for (r,z) plots:
+    40   267
+  Plot region (mu):      50.0000 x    4000.0000
+
+Other parameters (code units):
+
+     nt   28973
+     nr     400
+     nz       1
+     dt        1.084
+   dtem        2.169
+ icycem       1
+     rl     1178.10
+     zl        7.85
+     dr        2.9452
+     dz        7.8540
+ Zrmass        0.0005
+   wp0         0.000
+  a0(f)        0.945
+ Io(18)        1.926
+   tau     28255.46
+   t0          7.85
+  sigma       78.54
+ sigma0       78.54
+  f #         10.0
+  Rfoc     15708.0
+   D        1570.8
+   Zray     6168.5
+ min dr        2.95
+ max dt        2.17
+  melec       0
+  igrid       1
+  wa0         17.70
+  Ea0          0.13
+emar0.xy    
+ No data for emaz0.xy     id=        1300
+ No data for emph0.xy     id=        1350
+rher0.xy    
+ No data for natz0.xy     id=        1000
+ No data for rhez0.xy     id=        1100
+ No data for ni1z0.xy     id=        1050
+ No data for ni2z0.xy     id=        1150
+ No data for ni0z0.xy     id=        1200
+ plasma front edge (mu)   0.00000000      end    6000.00000    
+ plasma front edge (mu)  -399.949524      end    5599.44336    
+ plasma front edge (mu)  -799.938354      end    5198.88721    
+ plasma front edge (mu)  -1199.88391      end    4798.33057    
+ plasma front edge (mu)  -1599.71997      end    4397.77393    
+ plasma front edge (mu)  -1999.55615      end    3997.53223    
+emar1.xy    
+ No data for emaz1.xy     id=        1301
+ No data for emph1.xy     id=        1351
+rher1.xy    
+ No data for natz1.xy     id=        1001
+ No data for rhez1.xy     id=        1101
+ No data for ni1z1.xy     id=        1051
+ No data for ni2z1.xy     id=        1151
+ No data for ni0z1.xy     id=        1201
+ plasma front edge (mu)  -2399.39233      end    3597.69629    
+ plasma front edge (mu)  -2799.22852      end    3197.86011    
+ plasma front edge (mu)  -3199.06445      end    2798.02393    
+ plasma front edge (mu)  -3598.90063      end    2398.18799    
+ plasma front edge (mu)  -3998.73657      end    1998.35181    
+emar2.xy    
+ No data for emaz2.xy     id=        1302
+ No data for emph2.xy     id=        1352
+rher2.xy    
+ No data for natz2.xy     id=        1002
+ No data for rhez2.xy     id=        1102
+ No data for ni1z2.xy     id=        1052
+ No data for ni2z2.xy     id=        1152
+ No data for ni0z2.xy     id=        1202
+
+
+Loop timing (in seconds):
+------------------------
+ total         2.03
+     em        1.79
+ plasma        0.02
+ ioniz         0.02
+   diag        0.15
+ loop          0.000
+
+
+emac0.xy    
+rmsb0.xy    
+rpo20.xy    
+hami0.xy    
+i0r00.xy    
+a2r00.xy    
+aphi0.xy    
+rer00.xy    
+nar00.xy    
+n0r00.xy    
+n1r00.xy    
+n2r00.xy    
+a2ne0.xy    
+rhet0.xy    
+Finished run at time:  10:59

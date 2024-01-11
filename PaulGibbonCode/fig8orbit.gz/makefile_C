@@ -1,0 +1,12 @@
+FFLAGS = -w -g
+
+singlee.o: singlee.c
+	cc -c singlee.c
+
+orbit:  singlee.o
+	cc singlee.o -lm -o orbit
+
+
+clean:
+	rm orbit *.o
+

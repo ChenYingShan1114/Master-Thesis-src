@@ -1,0 +1,2 @@
+echo /usr/local/gle/gle_ps energy_nh /output=energy_nh.ps
+/usr/local/gle/gle_ps energy_nh /output=energy_nh.ps
