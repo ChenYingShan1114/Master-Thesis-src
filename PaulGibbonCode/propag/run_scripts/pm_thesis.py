@@ -244,7 +244,7 @@ for ii in range(num):
     refractive_index_of_plasma_omega_q = Refractive_index_of_plasma(ne_all, omega_q)
     phi_prop = np.zeros(ne_all.shape)
     for i in range(NZ_total- 1):
-        phi_prop[i, :] = (k_0 * r_all * r_all / 2 / Curvature_Radius(lambda_q, z_all[i+1] - k_0 * r_all * r_all / 2 / Curvature_Radius(lambda_q, z_all[i]))) + Gouy_phase_shift(lambda_q, z_all[i+1]) - Gouy_phase_shift(lambda_q, z_all[i]) + 2 * np.pi * q_H / lambda_0 * 0.5 * (refractive_index_of_plasma_omega_q[i, :] + refractive_index_of_plasma_omega_q[i+1, :]) * DZ
+        phi_prop[i, :] = (k_0 * r_all * r_all / 2 / Curvature_Radius(lambda_q, z_all[i+1]) - k_0 * r_all * r_all / 2 / Curvature_Radius(lambda_q, z_all[i])) + Gouy_phase_shift(lambda_q, z_all[i+1]) - Gouy_phase_shift(lambda_q, z_all[i]) + 2 * np.pi * q_H / lambda_0 * 0.5 * (refractive_index_of_plasma_omega_q[i, :] + refractive_index_of_plasma_omega_q[i+1, :]) * DZ
     phi_prop[-1, :] = phi_prop[-2, :]
 
     # Calculate propagation HHG field.
